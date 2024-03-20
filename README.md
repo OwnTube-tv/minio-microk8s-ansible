@@ -8,8 +8,8 @@ is used here as a sidecar to provide container platform capabilities and handle 
 
 Clone the repo:
 
-    git clone git@github.com:OwnTube-tv/minio-ansible.git
-    cd minio-ansible/
+    git clone git@github.com:OwnTube-tv/minio-microk8s-ansible.git
+    cd minio-microk8s-ansible/
 
 Create a virtual environment and install the dependencies:
 

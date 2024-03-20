@@ -9,7 +9,8 @@ inspired by [`mkdevops-se/hq.mkdevops.se`](https://github.com/mkdevops-se/hq.mkd
 
 Clone the repo:
 
-    git clone git@github.com:OwnTube-tv/minio-ansible.git && cd minio-ansible/
+    git clone git@github.com:OwnTube-tv/minio-ansible.git
+    cd minio-ansible/
 
 Create a virtual environment and install the dependencies:
 

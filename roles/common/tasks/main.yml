@@ -78,4 +78,26 @@
   when: sshd_config_hardening is changed
   tags: common
 
+- name: Set timezone to Europe/Stockholm
+  timezone:
+    name: Europe/Stockholm
+  tags: common
+
+- name: Install base packages
+  apt:
+    name:
+      - tree
+      - dlocate
+      - jq
+      - emacs
+      - pigz
+      - unzip
+      - wget
+      - net-tools
+      - parallel
+      - inetutils-traceroute
+    autoremove: true
+    state: present
+  tags: common
+
 ...

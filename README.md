@@ -1,8 +1,9 @@
 
-# `minio-ansible`
+# `minio-microk8s-ansible` – MinIO S3 Object Storage with a MicroK8s Sidecar
 
 Ansible playbook to configure our Ubuntu 22 servers to run a distributed MinIO S3 service, heavily
-inspired by [`mkdevops-se/hq.mkdevops.se`](https://github.com/mkdevops-se/hq.mkdevops.se).
+inspired by [`mkdevops-se/hq.mkdevops.se`](https://github.com/mkdevops-se/hq.mkdevops.se). MicroK8s
+is used here as a sidecar to provide container platform capabilities and handle internet ingress.
 
 
 ## Getting Started

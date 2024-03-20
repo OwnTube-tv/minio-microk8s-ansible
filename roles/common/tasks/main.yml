@@ -48,8 +48,8 @@
     dest: /etc/sudoers
     state: present
     regexp: '^{{ ansible_service_account.user }} ALL=\(ALL\) NOPASSWD: ALL'
-    line: '{{ ansible_service_account.user }} ALL=(ALL) NOPASSWD: ALL'
-    validate: 'visudo -cf %s'
+    line: "{{ ansible_service_account.user }} ALL=(ALL) NOPASSWD: ALL"
+    validate: "visudo -cf %s"
   become: yes
   tags: common
 
@@ -96,8 +96,7 @@
       - net-tools
       - parallel
       - inetutils-traceroute
+      - python3-venv
     autoremove: true
     state: present
   tags: common
-
-...

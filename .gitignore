@@ -6,4 +6,4 @@
 .idea/
 
 venv/
-.vault-pass
+.ansible_vault_password

@@ -1,0 +1,9 @@
+*.pyc
+*.orig
+*.rej
+*~
+.DS_Store
+.idea/
+
+venv/
+.vault-pass

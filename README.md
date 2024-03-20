@@ -26,3 +26,7 @@ Verify that the hosts are reachable:
 
     ansible minio_servers -m ping
 
+Run through the bootstrap playbook in `--check` mode to verify that provisioning can execute:
+
+    ansible-playbook bootstrap.yml --check
+

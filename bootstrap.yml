@@ -1,0 +1,6 @@
+---
+- hosts: minio_servers
+  become: yes
+  roles:
+    - common
+...

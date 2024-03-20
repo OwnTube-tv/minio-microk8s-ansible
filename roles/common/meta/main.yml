@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  author: mblomdahl
+  description: Provisioning of commonly needed utilities and sysadmin accounts for access.
+  company: OwnTube.tv
+
+  license: The Unlicense
+
+  min_ansible_version: 2.16
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 22.04
+
+  galaxy_tags:
+    - common
+
+dependencies: []
+...

@@ -1,25 +1,26 @@
 ---
 - name: Assert sysadmins are named
-  fail: msg="sysadmins must be listed"
+  ansible.builtin.fail: msg="sysadmins must be listed"
   when: not (sysadmins | length)
   tags: common
 
 - name: Assert service account is named
-  fail: msg="ansible_service_account must be named and list public_keys"
+  ansible.builtin.fail: msg="ansible_service_account must be named and list public_keys"
   when: not (ansible_service_account.user and ansible_service_account.public_keys | length)
   tags: common
 
 - name: Configure sysadmin accounts
-  user:
+  ansible.builtin.user:
     name: "{{ item.user }}"
     state: present
     groups: sudo
     append: true
+    shell: /bin/bash
   with_items: "{{ sysadmins }}"
   tags: common
 
 - name: Set (exclusive) ~/.ssh/authorized_keys for sysadmins
-  authorized_key:
+  ansible.posix.authorized_key:
     user: "{{ item.user }}"
     key: "{{ item.id_rsa_pub }}"
     exclusive: yes
@@ -27,7 +28,7 @@
   tags: common
 
 - name: Ensure service account user for Ansible exists
-  user:
+  ansible.builtin.user:
     name: "{{ ansible_service_account.user }}"
     groups: sudo
     state: present
@@ -36,7 +37,7 @@
   tags: common
 
 - name: Set (exclusive) ~/.ssh/authorized_keys for Ansible service account
-  authorized_key:
+  ansible.posix.authorized_key:
     user: "{{ ansible_service_account.user }}"
     state: present
     key: "{{ ansible_service_account.public_keys | join('\n') }}"
@@ -44,7 +45,7 @@
   tags: common
 
 - name: Allow passwordless sudo for Ansible service account
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/sudoers
     state: present
     regexp: '^{{ ansible_service_account.user }} ALL=\(ALL\) NOPASSWD: ALL'
@@ -54,13 +55,13 @@
   tags: common
 
 - name: Remove ~/.ssh/authorized_keys for 'root' user
-  file:
+  ansible.builtin.file:
     path: /root/.ssh/authorized_keys
     state: absent
   tags: common
 
 - name: Disable root login and password authentication for sudoers in /etc/ssh/sshd_config
-  blockinfile:
+  ansible.builtin.blockinfile:
     dest: /etc/ssh/sshd_config.d/50-cloud-init.conf
     marker: "# {mark} ANSIBLE MANAGED BLOCK common"
     block: |
@@ -74,17 +75,17 @@
   tags: common
 
 - name: Restart sshd to apply config changes
-  service: name=sshd state=restarted
+  ansible.builtin.service: name=sshd state=restarted
   when: sshd_config_hardening is changed
   tags: common
 
 - name: Set timezone to Europe/Stockholm
-  timezone:
+  community.general.timezone:
     name: Europe/Stockholm
   tags: common
 
 - name: Install base packages
-  apt:
+  ansible.builtin.apt:
     name:
       - tree
       - dlocate

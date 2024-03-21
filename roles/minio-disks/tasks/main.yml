@@ -1,0 +1,48 @@
+---
+- name: Check if the 'minio_vg_device' is a block device
+  ansible.builtin.stat:
+    path: "{{ minio_vg_device }}"
+  register: minio_vg_device_stat
+  tags: minio-disks
+
+- name: Create MinIO storage if 'minio_vg_device' is available
+  when:
+    - minio_vg_device_stat.stat.exists
+    - minio_vg_device_stat.stat.isblk
+  block:
+    - name: Install LVM and XFS packages
+      ansible.builtin.package:
+        name:
+          - lvm2
+          - xfsprogs
+        state: present
+      tags: minio-disks
+
+    - name: Create 'minio-vg' volume group
+      ansible.builtin.lvg: vg=minio-vg pvs={{ minio_vg_device }}
+      tags: minio-disks
+
+    - name: Create 928g '/dev/minio-vg/minio-diskN-lv'
+      ansible.builtin.lvol: vg=minio-vg lv=minio-{{ item }}-lv size=928g
+      loop: "{{ minio_lv_disks }}"
+      tags: minio-disks
+
+    - name: Create XFS filesystem on '/dev/minio-vg/minio-diskN-lv'
+      ansible.builtin.filesystem:
+        fstype: xfs
+        dev: /dev/minio-vg/minio-{{ item }}-lv
+      loop: "{{ minio_lv_disks }}"
+      tags: minio-disks
+
+    - name: Mount XFS filesystem '/dev/minio-vg/minio-diskN-lv' as '/mnt/minio-diskN' on boot
+      ansible.posix.mount:
+        path: /mnt/minio-{{ item }}
+        src: /dev/minio-vg/minio-{{ item }}-lv
+        fstype: xfs
+        opts: defaults
+        passno: 2
+        state: mounted
+      loop: "{{ minio_lv_disks }}"
+      tags: minio-disks
+
+...

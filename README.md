@@ -17,7 +17,7 @@ Create a virtual environment and install the dependencies:
     source venv/bin/activate
     pip install -r requirements.txt
 
-Add the Ansible Vault password to a file named `.ansible_vault_password` and restrict readability.
+Add the Ansible Vault password to a file named `.ansible_vault_password` and restrict readability:
 
     echo theSecretAnsibleVaultPassword > .ansible_vault_password
     chmod og-r .ansible_vault_password

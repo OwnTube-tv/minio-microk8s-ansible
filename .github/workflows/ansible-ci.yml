@@ -15,7 +15,9 @@ jobs:
           playbook: bootstrap.yml
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: |
+            [83.233.237.206]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE4vBfnFG/U76eqgbLFqkp2yMKR3cpNrwPc6lTZAFNfq
             [83.233.237.207]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE4vBfnFG/U76eqgbLFqkp2yMKR3cpNrwPc6lTZAFNfq
+            [83.233.237.208]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSP+L5mjXBT5UqCi9/rHWFAeMCqhGyxYVbSQfmDkNuB
             [83.233.237.209]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSP+L5mjXBT5UqCi9/rHWFAeMCqhGyxYVbSQfmDkNuB
             [82.183.39.110]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyaOsHcT6Sy2UJMg40vxq+xxhPvvaSVjS2u0pxKy1dT
           vault_password: ${{ secrets.VAULT_PASSWORD }}

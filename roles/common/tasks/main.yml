@@ -98,6 +98,9 @@
       - parallel
       - inetutils-traceroute
       - python3-venv
+      - bzip2
+      - make
+      - gcc
     autoremove: true
     state: present
   tags: common

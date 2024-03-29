@@ -3,8 +3,8 @@ Hardware Details for MinIO Servers
 ==================================
 
 The MinIO servers have a similar baseline with 8-core CPUs (Intel i5 or AMD Ryzen 7/9), 64 GB memory, and 16 TB of
-SSD storage each. The storage is configured as two LVM Volume Groups, a 8 TB `ubuntu-vg` with M.2 disks and
-a 8 TB `minio-vg` with SATA disks. See additional details below.
+SSD storage each. The storage is configured as two LVM Volume Groups, a 8 TB "`ubuntu-vg`" with M.2 storage and
+a 8 TB "`minio-vg`" with SATA storage. See additional details below.
 
 
 Server Details for `minio1`

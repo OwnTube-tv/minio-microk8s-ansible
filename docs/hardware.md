@@ -21,8 +21,8 @@ Server setup:
       - 8 TB SSD (Corsair MP600 PRO M.2)
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
-      - 1 GbE LAN (Intel)
-      - 802.11ax Wi-Fi
+      - 1 GbE LAN (Intel), address 192.168.1.6/24
+      - 802.11ax Wi-Fi, address 192.168.0.X/24
 
 
 Server Details for `minio2`
@@ -39,8 +39,8 @@ Server setup:
       - 8 TB SSD (Corsair MP600 PRO M.2)
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
-      - 1 GbE LAN (Intel)
-      - 802.11ax Wi-Fi
+      - 1 GbE LAN (Intel), address 192.168.1.8/24
+      - 802.11ax Wi-Fi, address 192.168.0.X/24
 
 
 Server Details for `minio3`
@@ -58,8 +58,8 @@ Server setup:
       - 4 TB SSD (Kingston NV2 M.2)
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
-      - 2.5 GbE LAN (Realtek r8125)
-      - 802.11ax Wi-Fi
+      - 2.5 GbE LAN (Realtek r8125), address 192.168.3.7/24
+      - 802.11ax Wi-Fi, address 192.168.2.123
 
 
 Server Details for `minio4`
@@ -77,6 +77,6 @@ Server setup:
       - 4 TB SSD (Kingston NV2 M.2)
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
-      - 2.5 GbE LAN (Realtek r8125)
-      - 802.11ax Wi-Fi
+      - 2.5 GbE LAN (Realtek r8125), address 192.168.3.9/24
+      - 802.11ax Wi-Fi, address 192.168.2.124
 

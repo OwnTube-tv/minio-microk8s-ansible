@@ -88,6 +88,7 @@
 - name: Install base packages
   ansible.builtin.apt:
     name:
+      - acl
       - tree
       - dlocate
       - jq

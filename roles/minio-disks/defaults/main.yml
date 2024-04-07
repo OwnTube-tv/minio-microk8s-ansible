@@ -1,4 +1,5 @@
 ---
+
 minio_vg_device: /dev/sda
 
 minio_lv_disks:

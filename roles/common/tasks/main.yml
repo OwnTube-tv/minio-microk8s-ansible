@@ -1,4 +1,5 @@
 ---
+
 - name: Assert sysadmins are named
   ansible.builtin.fail: msg="sysadmins must be listed"
   when: not (sysadmins | length)
@@ -104,3 +105,5 @@
     autoremove: true
     state: present
   tags: common
+
+...

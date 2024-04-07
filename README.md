@@ -28,4 +28,18 @@ Verify that the hosts are reachable:
 
 Run through the bootstrap playbook in `--check` mode to verify that provisioning can execute:
 
-    ansible-playbook bootstrap.yml --check
+    ansible-playbook 0-bootstrap.yml --check
+
+
+## Live Deployment
+
+The setup steps for a live deployment are as follows:
+
+1. Run the `0-bootstrap.yml` playbook to prepare the server baseline for MinIO and MicroK8s setup:
+
+    ```shell
+    ansible-playbook 0-bootstrap.yml
+    ```
+
+    Follow the instructions in the end of the playbook to establish HA clustering for MicroK8s.
+

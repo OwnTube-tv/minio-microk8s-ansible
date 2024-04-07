@@ -1,7 +1,0 @@
----
-- hosts: minio_servers
-  become: yes
-  roles:
-    - common
-    - minio-disks
-...

@@ -1,0 +1,59 @@
+---
+
+- name: Install MicroK8s
+  community.general.snap:
+    channel: stable
+    name: microk8s
+    classic: yes
+  changed_when: no
+  tags: microk8s-node
+
+- name: Wait for MicroK8s to be ready
+  ansible.builtin.shell: microk8s status --wait-ready
+  register: microk8s_status
+  until: microk8s_status.stdout.find('is running') != -1
+  changed_when: no
+  tags: microk8s-node
+
+- name: Create kubectl Snap alias
+  community.general.snap_alias:
+    name: microk8s.kubectl
+    alias: kubectl
+  changed_when: no
+  tags: microk8s-node
+
+- name: Add MicroK8s users to 'microk8s' group
+  ansible.builtin.user:
+    name: '{{ user }}'
+    groups: microk8s
+    append: yes
+  with_items: '{{ microk8s_users }}'
+  loop_control:
+    loop_var: user
+  tags: microk8s-node
+
+- name: Determine the designated initial master host
+  set_fact:
+    designated_host: '{{ (groups[microk8s_servers_group] | sort)[0] }}'
+  tags: microk8s-node
+
+- name: Print message about adding invites for other nodes from the designated/first MicroK8s node
+  ansible.builtin.debug:
+    msg: |
+      Login to the designated/first MicroK8s node
+      {{ hostvars[inventory_hostname].ansible_default_ipv4.address }} via SSH and run
+      'microk8s add-node' for each of the other nodes per the https://microk8s.io/docs/clustering
+      documentation.
+  when: inventory_hostname == designated_host
+  tags: microk8s-node
+
+- name: Print message about joining the other MicroK8s nodes to the designated/first node
+  ansible.builtin.debug:
+    msg: |
+      Login to the MicroK8s node {{ hostvars[inventory_hostname].ansible_default_ipv4.address }} via
+      SSH and cluster it with the first host with 'microk8s join
+      {{ hostvars[designated_host].ansible_default_ipv4.address }}:25000/<token>'.
+  when: inventory_hostname != designated_host
+  tags: microk8s-node
+
+...

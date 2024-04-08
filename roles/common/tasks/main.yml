@@ -100,6 +100,7 @@
       - parallel
       - inetutils-traceroute
       - python3-venv
+      - python3-kubernetes
       - bzip2
       - make
       - gcc

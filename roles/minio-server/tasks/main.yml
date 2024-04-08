@@ -16,7 +16,11 @@
   tags: minio-env
 
 - name: Configure MinIO server and network ingress
-  import_tasks: minio-env.yml
+  import_tasks: minio-server.yml
   tags: minio-server
+
+- name: Configure MinIO client and 'mc' alias
+  import_tasks: minio-client.yml
+  tags: minio-client
 
 ...

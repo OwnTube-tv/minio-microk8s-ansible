@@ -4,6 +4,25 @@ minio_servers_group: all
 
 minio_server_deb_package: https://dl.min.io/server/minio/release/linux-amd64/archive/minio_20240330094156.0.0_amd64.deb
 
+minio_client_deb_package: https://dl.min.io/client/mc/release/linux-amd64/mcli_20240330152952.0.0_amd64.deb
+
+minio_client_placeholder_aliases:
+  - alias: gcs
+  - alias: play
+  - alias: s3
+  - alias: local
+
+# Extra S3 aliases for MinIO client, expects a list of dicts like this one:
+#
+#     minio_client_extra_aliases:
+#       - hostname: https://s3-eu-north-1.amazonaws.com
+#         alias: my-AWS-account-for-S3-buckets
+#         access_key: my-AWS_ACCESS_KEY_ID
+#         secret_key: my-AWS_SECRET_ACCESS_KEY
+#       - ...
+#
+minio_client_extra_aliases: []
+
 minio_root_user:
 
 minio_root_password:

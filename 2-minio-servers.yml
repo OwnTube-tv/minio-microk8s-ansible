@@ -5,5 +5,30 @@
   roles:
     - role: minio-server
       minio_servers_group: minio_microk8s_servers
+      minio_client_extra_aliases:
+        - hostname: https://s3-eu-north-1.amazonaws.com
+          alias: '{{ s3_sms0_alias }}'
+          access_key: '{{ s3_sms0_access_key }}'
+          secret_key: '{{ s3_sms0_secret_key }}'
+        - hostname: https://s3.eu-central-003.backblazeb2.com
+          alias: '{{ bb_mrnd_alias }}'
+          access_key: '{{ bb_mrnd_access_key }}'
+          secret_key: '{{ bb_mrnd_secret_key }}'
+        - hostname: https://s3-eu-north-1.amazonaws.com
+          alias: '{{ s3_swt1_alias }}'
+          access_key: '{{ s3_swt1_access_key }}'
+          secret_key: '{{ s3_swt1_secret_key }}'
+        - hostname: https://s3-eu-north-1.amazonaws.com
+          alias: '{{ s3_swt0_alias }}'
+          access_key: '{{ s3_swt0_access_key }}'
+          secret_key: '{{ s3_swt0_secret_key }}'
+        - hostname: https://s3-eu-north-1.amazonaws.com
+          alias: '{{ s3_swt3_alias }}'
+          access_key: '{{ s3_swt3_access_key }}'
+          secret_key: '{{ s3_swt3_secret_key }}'
+        - hostname: https://s3.us-east-005.backblazeb2.com
+          alias: '{{ bb_ar97_alias }}'
+          access_key: '{{ bb_ar97_access_key }}'
+          secret_key: '{{ bb_ar97_secret_key }}'
 
 ...

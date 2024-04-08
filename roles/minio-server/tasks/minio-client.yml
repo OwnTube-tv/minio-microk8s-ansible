@@ -1,0 +1,70 @@
+---
+
+- name: Assert that MinIO root user and password are set
+  assert:
+    that:
+      - minio_root_user is truthy
+      - minio_root_password is truthy
+  no_log: true # contains root password
+  tags: minio-client
+
+- name: Gather package facts to find MinIO client
+  ansible.builtin.package_facts:
+    manager: apt
+  tags: minio-client
+
+- name: Install MinIO client
+  ansible.builtin.apt:
+    deb: '{{ minio_client_deb_package }}'
+    state: present
+  when: '"mcli" not in ansible_facts.packages'
+  tags: minio-client
+
+- name: Check if the 'mc' symlink is already configured for MinIO client
+  ansible.builtin.stat:
+    path: /usr/local/bin/mc
+  register: minio_mc_symlink_stat
+  tags: minio-client
+
+- name: Configure 'mc' alias if not already configured for MinIO client
+  ansible.builtin.shell: ln -s /usr/local/bin/mcli /usr/local/bin/mc
+  when: not minio_mc_symlink_stat.stat.exists
+  tags: minio-client
+
+- name: Check if the 'minio' alias is already configured in MinIO client
+  ansible.builtin.shell: mc alias ls minio --json --no-color
+  ignore_errors: yes
+  changed_when: false
+  register: minio_alias_minio
+  no_log: true
+  tags: minio-client
+
+- name: Configure MinIO client with 'minio' alias if not already configured
+  ansible.builtin.shell: >
+    mc alias set minio https://minio.owntube.tv {{ minio_root_user }} {{ minio_root_password }}
+  when: minio_alias_minio.rc != 0
+  no_log: true # contains credentials
+  tags: minio-client
+
+- name: Check for extra MinIO client S3 aliases if 'minio_client_extra_aliases' is passed
+  ansible.builtin.shell: mc alias ls --json --no-color | jq .alias
+  changed_when: false
+  register: minio_aliases_list
+  no_log: true # contains credentials
+  tags: minio-client
+
+- name: Configure MinIO client with extra S3 aliases if 'minio_client_extra_aliases' is passed
+  ansible.builtin.shell: >
+    mc alias set {{ item.alias }} {{ item.hostname }} {{ item.access_key }} {{ item.secret_key }}
+  loop: "{{ minio_client_extra_aliases }}"
+  when: "\"{{ item.alias }}\" not in minio_aliases_list.stdout"
+  no_log: true # contains credentials
+  tags: minio-client
+
+- name: Remove default extra aliases from MinIO client install
+  ansible.builtin.shell: mc alias rm {{ item.alias }}
+  loop: "{{ minio_client_placeholder_aliases }}"
+  when: "\"{{ item.alias }}\" in minio_aliases_list.stdout"
+  tags: minio-client
+
+...

@@ -108,4 +108,12 @@
     state: present
   tags: common
 
+- name: Ensure firewalld is not installed, as it conflicts with Calico iptables networking
+  ansible.builtin.apt:
+    name:
+      - firewalld
+      - python3-firewall
+    state: absent
+  tags: common
+
 ...

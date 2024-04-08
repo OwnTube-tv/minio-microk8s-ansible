@@ -24,7 +24,7 @@ Add the Ansible Vault password to a file named `.ansible_vault_password` and res
 
 Verify that the hosts are reachable:
 
-    ansible minio_servers -m ping
+    ansible minio_microk8s_servers -m ping
 
 Run through the bootstrap playbook in `--check` mode to verify that provisioning can execute:
 

@@ -1,0 +1,53 @@
+---
+
+- name: Get current MicroK8s add-ons state
+  ansible.builtin.shell: microk8s.status --format yaml
+  changed_when: no
+  check_mode: no
+  register: microk8s_status_yaml
+  tags: microk8s-cluster
+
+- name: Determine current MicroK8s add-ons state
+  ansible.builtin.set_fact:
+    microk8s_status: '{{ microk8s_status_yaml.stdout | from_yaml }}'
+  tags: microk8s-cluster
+
+- name: Determine the designated initial master host
+  ansible.builtin.set_fact:
+    designated_host: '{{ (groups[microk8s_servers_group] | sort)[0] }}'
+  tags: microk8s-cluster
+
+- name: Enable MicroK8s add-ons on the designated master
+  when: inventory_hostname == designated_host
+  block:
+    - name: Enable currently-disabled MicroK8s add-ons
+      ansible.builtin.shell: 'microk8s.enable {{ item.name }}'
+      loop: '{{ microk8s_status.addons }}'
+      loop_control:
+        label: "{{ item.name }}"
+      when:
+        - item.status == 'disabled'
+        - item.name in microk8s_plugins
+        - microk8s_plugins[item.name]
+  tags: microk8s-cluster
+
+- name: Create helm3 Snap alias on all MicroK8s nodes, if enabled
+  community.general.snap_alias:
+    name: microk8s.helm3
+    alias: helm3
+  changed_when: no
+  when:
+    - microk8s_plugins.helm3
+    - microk8s_plugins['helm3'] is truthy
+  tags: microk8s-cluster
+
+- name: Configure MicroK8s user accounts for host-local access
+  include_tasks: user-configurations.yml
+  tags: microk8s-user
+
+- name: Configure Kubernetes resources in MicroK8s cluster
+  include_tasks: k8s-configurations.yml
+  when: inventory_hostname == designated_host
+  tags: microk8s-cluster
+
+...

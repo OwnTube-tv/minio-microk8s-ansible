@@ -1,0 +1,48 @@
+---
+
+- name: Create .kube folder for the MicroK8s users
+  ansible.builtin.file:
+    path: '/home/{{ user }}/.kube'
+    state: directory
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    mode: 0750
+  with_items: '{{ microk8s_users }}'
+  loop_control:
+    loop_var: user
+  tags: microk8s-user
+
+- name: Create kubectl config for the MicroK8s users
+  ansible.builtin.shell: microk8s config > /home/{{ user }}/.kube/config
+  args:
+    executable: /bin/bash
+  with_items: '{{ microk8s_users }}'
+  loop_control:
+    loop_var: user
+  changed_when: no
+  tags: microk8s-user
+
+- name: Correct ownership on kubectl config for MicroK8s users
+  ansible.builtin.file:
+    path: '/home/{{ user }}/.kube/config'
+    state: file
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    mode: 0640
+  with_items: '{{ microk8s_users }}'
+  loop_control:
+    loop_var: user
+  changed_when: no
+  tags: microk8s-user
+
+- name: Install k9s for each of the MicroK8s users
+  become_user: '{{ user }}'
+  ansible.builtin.shell: curl -sS https://webinstall.dev/k9s | bash
+  args:
+    creates: '/home/{{ user }}/.local/bin/k9s'
+  with_items: '{{ microk8s_users }}'
+  loop_control:
+    loop_var: user
+  tags: microk8s-user
+
+...

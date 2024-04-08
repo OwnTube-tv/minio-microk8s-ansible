@@ -1,0 +1,29 @@
+---
+
+- name: Create root .kube folder for the MicroK8s designated initial host
+  ansible.builtin.file:
+    path: /root/.kube
+    state: directory
+    mode: 0750
+  tags: microk8s-cluster
+
+- name: Create root kubectl config for the MicroK8s designated host
+  ansible.builtin.shell: microk8s config > /root/.kube/config
+  args:
+    executable: /bin/bash
+  changed_when: no
+  tags: microk8s-cluster
+
+- name: Create Let's Encrypt issuer for cert-manager
+  kubernetes.core.k8s:
+    definition: "{{ lookup('file', 'letsencrypt-cluster-issuer.yml') | from_yaml }}"
+    state: present
+  tags: microk8s-cluster
+
+- name: Create ingress for Kubernetes Dashboard, https://k8s-dashboard.owntube.tv
+  kubernetes.core.k8s:
+    definition: "{{ lookup('file', 'k8s-dashboard-ingress.yml') | from_yaml }}"
+    state: present
+  tags: microk8s-cluster
+
+...

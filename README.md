@@ -43,3 +43,17 @@ The setup steps for a live deployment are as follows:
 
     Follow the instructions in the end of the playbook to establish HA clustering for MicroK8s.
 
+2. Run the `1-microk8s-cluster.yml` playbook to set up MicroK8s add-ons and configure the cluster:
+
+    ```shell
+    ansible-playbook 1-microk8s-cluster.yml
+    ```
+
+    After the successful completion of the playbook, you can access the Kubernetes dashboard at
+    https://k8s-dashboard.owntube.tv/ with a proper certificate and login with a token created from
+    one of the MicroK8s cluster nodes:
+
+    ```shell
+    kubectl get secret -n kube-system microk8s-dashboard-token \
+      -o jsonpath="{.data.token}" | base64 -d
+    ```

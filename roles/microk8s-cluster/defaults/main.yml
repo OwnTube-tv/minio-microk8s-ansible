@@ -1,0 +1,20 @@
+---
+
+# Inspired by https://github.com/istvano/ansible_role_microk8s/blob/master/defaults/main.yml
+
+microk8s_servers_group: all
+
+microk8s_users: []
+
+microk8s_plugins:
+  cert-manager: yes
+  dashboard: yes
+  dns: yes
+  helm: yes
+  helm3: yes
+  hostpath-storage: yes
+  ingress: yes
+  metrics-server: yes
+  host-access: yes
+
+...

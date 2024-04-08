@@ -1,0 +1,28 @@
+---
+
+galaxy_info:
+  author: mblomdahl
+  description: |
+    Configuration of the MicroK8s cluster and its add-ons. Under consideration for partial
+    replacement by the Ansible role https://github.com/istvano/ansible_role_microk8s (see issue #9).
+  company: OwnTube.tv
+
+  license: The Unlicense
+
+  min_ansible_version: 2.16
+
+  platforms:
+    - name: EL
+      versions:
+        - 7
+    - name: Ubuntu
+      versions:
+        - 22.04
+
+  galaxy_tags:
+    - microk8s
+
+dependencies:
+  - microk8s-node
+
+...

@@ -1,0 +1,36 @@
+---
+
+- name: Gather package facts to find MinIO server
+  ansible.builtin.package_facts:
+    manager: apt
+  tags: minio-server
+
+- name: Install MinIO server
+  ansible.builtin.apt:
+    deb: '{{ minio_server_deb_package }}'
+    state: present
+  when: '"minio" not in ansible_facts.packages'
+  notify: Restart MinIO service
+  tags: minio-server
+
+- name: Determine the designated initial master host
+  ansible.builtin.set_fact:
+    designated_host: '{{ (groups[minio_servers_group] | sort)[0] }}'
+  tags: minio-server
+
+- name: Create ingress for MinIO server, https://minio.owntube.tv
+  kubernetes.core.k8s:
+    definition: "{{ item }}"
+    state: present
+  loop: "{{ lookup('file', 'minio-host-access-ingress.yml') | from_yaml_all }}"
+  when: inventory_hostname == designated_host
+  tags: minio-server
+
+- name: Set MinIO service to started and enabled
+  ansible.builtin.service:
+    name: minio
+    enabled: yes
+    state: started
+  tags: minio-server
+
+...

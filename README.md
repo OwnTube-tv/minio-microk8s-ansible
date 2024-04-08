@@ -1,8 +1,9 @@
-# `minio-microk8s-ansible` – MinIO S3 Object Storage with a MicroK8s Sidecar
 
-Ansible playbook to configure our Ubuntu 22 servers to run a distributed MinIO S3 service, heavily
-inspired by [`mkdevops-se/hq.mkdevops.se`](https://github.com/mkdevops-se/hq.mkdevops.se). MicroK8s
-is used here as a sidecar to provide container platform capabilities and handle internet ingress.
+# `minio-microk8s-ansible` – MinIO S3 Object Storage with MicroK8s Load Balancing/Ingress
+
+Ansible playbook to configure our Ubuntu 22 servers to run a distributed MinIO S3 service. MicroK8s
+is used here as a sidecar to provide container platform capabilities, load balancing, and handle
+internet ingress.
 
 ## Getting Started
 
@@ -57,3 +58,12 @@ The setup steps for a live deployment are as follows:
     kubectl get secret -n kube-system microk8s-dashboard-token \
       -o jsonpath="{.data.token}" | base64 -d
     ```
+
+3. Run the `2-minio-servers.yml` playbook to set up the MinIO S3 object storage service:
+
+    ```shell
+    ansible-playbook -e @secrets.yml 2-minio-servers.yml
+    ```
+
+    After the successful completion of the playbook, you can access the MinIO web interface at
+    https://minio.owntube.tv/ and be able to login with the root username and password.

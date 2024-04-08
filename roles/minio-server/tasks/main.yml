@@ -1,0 +1,22 @@
+---
+
+- name: Create 'minio-user' user
+  ansible.builtin.user:
+    name: minio-user
+    uid: 1010
+    comment: "MinIO server user account"
+  tags: minio-user
+
+- name: Configure MinIO disks
+  import_tasks: minio-disks.yml
+  tags: minio-disks
+
+- name: Configure MinIO environment
+  import_tasks: minio-env.yml
+  tags: minio-env
+
+- name: Configure MinIO server and network ingress
+  import_tasks: minio-env.yml
+  tags: minio-server
+
+...

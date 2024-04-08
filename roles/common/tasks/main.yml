@@ -104,6 +104,7 @@
       - bzip2
       - make
       - gcc
+      - xsel
     autoremove: true
     state: present
   tags: common

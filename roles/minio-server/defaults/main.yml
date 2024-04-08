@@ -1,0 +1,23 @@
+---
+
+minio_servers_group: all
+
+minio_server_deb_package: https://dl.min.io/server/minio/release/linux-amd64/archive/minio_20240330094156.0.0_amd64.deb
+
+minio_root_user:
+
+minio_root_password:
+
+minio_vg_device: /dev/sda
+
+minio_lv_disks:
+  - disk1
+  - disk2
+  - disk3
+  - disk4
+  - disk5
+  - disk6
+  - disk7
+  - disk8
+
+...

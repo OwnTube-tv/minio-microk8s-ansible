@@ -46,4 +46,13 @@
       loop: "{{ minio_lv_disks }}"
       tags: minio-disks
 
+    - name: Change MinIO disks ownership to 'minio-user'
+      ansible.builtin.file:
+        path: /mnt/minio-{{ item }}
+        state: directory
+        owner: minio-user
+        group: minio-user
+      loop: "{{ minio_lv_disks }}"
+      tags: minio-disks
+
 ...

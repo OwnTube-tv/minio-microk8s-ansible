@@ -20,6 +20,12 @@
     state: present
   tags: microk8s-cluster
 
+- name: Add 'host.local' to CoreDNS ConfigMap for MicroK8s 'host-access' add-on compatibility
+  kubernetes.core.k8s:
+    definition: "{{ lookup('file', 'coredns-host-access-fallthrough.yml') | from_yaml }}"
+    state: present
+  tags: microk8s-cluster
+
 - name: Create ingress for Kubernetes Dashboard, https://k8s-dashboard.owntube.tv
   kubernetes.core.k8s:
     definition: "{{ lookup('file', 'k8s-dashboard-ingress.yml') | from_yaml }}"

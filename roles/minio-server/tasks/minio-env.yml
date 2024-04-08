@@ -1,0 +1,33 @@
+---
+
+- name: Assert that MinIO root user and password are set
+  assert:
+    that:
+      - minio_root_user is truthy
+      - minio_root_password is truthy
+  no_log: true # contains root password
+  tags: minio-env
+
+- name: Configure MinIO environment
+  ansible.builtin.template:
+    src: etc-default-minio.j2
+    dest: /etc/default/minio
+    owner: minio-user
+    group: minio-user
+    mode: 0640
+  no_log: true # contains root password
+  notify: Restart MinIO service
+  tags: minio-env
+
+- name: Enumerate all MinIO servers in the hosts file
+  blockinfile:
+    dest: /etc/hosts
+    marker: "# {mark} ANSIBLE MANAGED BLOCK minio-server"
+    content: |
+      {% for host in groups[minio_servers_group] %}
+      {{ hostvars[host].ansible_default_ipv4.address }} minio-{{ host }}-int.owntube.tv
+      {% endfor %}
+  notify: Restart MinIO service
+  tags: minio-env
+
+...

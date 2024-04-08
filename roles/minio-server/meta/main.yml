@@ -2,7 +2,7 @@
 
 galaxy_info:
   author: mblomdahl
-  description: Provisioning of LVM disks for MinIO Object Storage.
+  description: Provisioning of distributed MinIO Object Storage.
   company: OwnTube.tv
 
   license: The Unlicense
@@ -10,9 +10,6 @@ galaxy_info:
   min_ansible_version: 2.16
 
   platforms:
-    - name: EL
-      versions:
-        - 7
     - name: Ubuntu
       versions:
         - 22.04

@@ -18,8 +18,8 @@ jobs:
           known_hosts: |
             [83.233.237.206]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnXbhMpfFhusPWbl0OhXDjO9m0XT51FWF7PowVNOVg/
             [83.233.237.208]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSP+L5mjXBT5UqCi9/rHWFAeMCqhGyxYVbSQfmDkNuB
-            [82.183.39.110]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
-            [82.183.39.110]:624 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
+            [82.183.52.3]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
+            [82.183.52.5]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
           vault_password: ${{ secrets.VAULT_PASSWORD }}
           options: |
             --diff
@@ -32,8 +32,8 @@ jobs:
           known_hosts: |
             [83.233.237.206]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnXbhMpfFhusPWbl0OhXDjO9m0XT51FWF7PowVNOVg/
             [83.233.237.208]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSP+L5mjXBT5UqCi9/rHWFAeMCqhGyxYVbSQfmDkNuB
-            [82.183.39.110]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
-            [82.183.39.110]:624 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
+            [82.183.52.3]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
+            [82.183.52.5]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
           vault_password: ${{ secrets.VAULT_PASSWORD }}
           options: |
             --diff
@@ -46,8 +46,8 @@ jobs:
           known_hosts: |
             [83.233.237.206]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnXbhMpfFhusPWbl0OhXDjO9m0XT51FWF7PowVNOVg/
             [83.233.237.208]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSP+L5mjXBT5UqCi9/rHWFAeMCqhGyxYVbSQfmDkNuB
-            [82.183.39.110]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
-            [82.183.39.110]:624 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
+            [82.183.52.3]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
+            [82.183.52.5]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
           vault_password: ${{ secrets.VAULT_PASSWORD }}
           options: |
             --diff

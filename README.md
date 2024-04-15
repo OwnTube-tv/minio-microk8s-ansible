@@ -183,7 +183,7 @@ Setup steps to integrate MinIO with Auth0 OpenID Connect for user authentication
         ```
 
 6.  Verify that the Auth0 OpenID Connect integration works by logging in to
-    https://minio.owntube.tv/console/ with ...
+    https://minio.owntube.tv/ with ...
 
     1.  a user that does not have a policy mapped to it, expect to only see the
         `"auth0-openid-noaccess"` bucket listed in the _Object Browser_, with read-only access only

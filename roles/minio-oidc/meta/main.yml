@@ -1,0 +1,24 @@
+---
+
+galaxy_info:
+  author: mblomdahl
+  description: Configuration of Auth0 OpenID Connect login for MinIO Object Storage.
+  company: OwnTube.tv
+
+  license: The Unlicense
+
+  min_ansible_version: 2.16
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 22.04
+
+  galaxy_tags:
+    - minio
+    - auth0
+    - oidc
+
+dependencies: []
+
+...

@@ -1,0 +1,37 @@
+---
+
+- name: Assert that OpenID Identity Provider config URL, client ID and secret are set
+  assert:
+    that:
+      - minio_auth0_oauth_config_url is truthy
+      - minio_auth0_oauth_client_id is truthy
+      - minio_auth0_oauth_client_secret is truthy
+  no_log: true # contains client secret
+  tags: minio-oidc
+
+- name: Configure OpenID Identity Provider in MinIO environment
+  blockinfile:
+    dest: /etc/default/minio
+    owner: minio-user
+    group: minio-user
+    mode: 0640
+    marker: "# {mark} ANSIBLE MANAGED BLOCK minio-oidc"
+    content: |
+      # Configure OpenID Identity Provider,
+      # https://min.io/docs/minio/linux/reference/minio-server/settings/iam/openid.html#settings
+      MINIO_IDENTITY_OPENID_CONFIG_URL={{ minio_auth0_oauth_config_url }}
+      MINIO_IDENTITY_OPENID_ENABLE=on
+      MINIO_IDENTITY_OPENID_CLIENT_ID={{ minio_auth0_oauth_client_id }}
+      MINIO_IDENTITY_OPENID_CLIENT_SECRET={{ minio_auth0_oauth_client_secret }}
+      MINIO_IDENTITY_OPENID_SCOPES="openid,profile,nickname,email,name,picture,created_at"
+      MINIO_IDENTITY_OPENID_REDIRECT_URI="https://minio.owntube.tv/console/oauth_callback"
+      MINIO_IDENTITY_OPENID_DISPLAY_NAME="Auth0-GitHub authentication"
+      MINIO_IDENTITY_OPENID_CLAIM_NAME=policy
+      MINIO_IDENTITY_OPENID_CLAIM_PREFIX=https://minio.owntube.tv/console/
+      MINIO_IDENTITY_OPENID_CLAIM_USERINFO=on
+      MINIO_IDENTITY_OPENID_COMMENT="Auth0 social connection for GitHub OwnTube-tv organization"
+  no_log: true # contains client secret
+  notify: Restart MinIO service
+  tags: minio-oidc
+
+...

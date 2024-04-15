@@ -1,0 +1,7 @@
+---
+
+- name: Configure OpenID in MinIO environment
+  import_tasks: minio-oidc.yml
+  tags: minio-oidc
+
+...

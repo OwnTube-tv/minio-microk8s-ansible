@@ -1,0 +1,9 @@
+---
+
+- hosts: minio_microk8s_servers
+  become: yes
+  roles:
+    - role: minio-oidc
+      minio_oidc_group: minio_microk8s_servers
+
+...

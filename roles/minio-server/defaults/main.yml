@@ -10,7 +10,6 @@ minio_client_placeholder_aliases:
   - alias: gcs
   - alias: play
   - alias: s3
-  - alias: local
 
 # Extra S3 aliases for MinIO client, expects a list of dicts like this one:
 #

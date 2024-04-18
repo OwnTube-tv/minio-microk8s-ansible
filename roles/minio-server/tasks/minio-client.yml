@@ -46,6 +46,21 @@
   no_log: true # contains credentials
   tags: minio-client
 
+- name: Check if the 'minio' alias is already configured in MinIO client
+  ansible.builtin.shell: mc alias ls local --json --no-color
+  ignore_errors: yes
+  changed_when: false
+  register: minio_alias_local
+  no_log: true # contains credentials
+  tags: minio-client
+
+- name: Configure MinIO client with 'local' alias if not already configured
+  ansible.builtin.shell: >
+    mc alias set local http://127.0.0.1:9000 {{ minio_root_user }} {{ minio_root_password }}
+  when: minio_alias_local.rc != 0 or "{{ minio_root_user }}" not in minio_alias_local.stdout
+  no_log: true # contains credentials
+  tags: minio-client
+
 - name: Check for extra MinIO client S3 aliases if 'minio_client_extra_aliases' is passed
   ansible.builtin.shell: mc alias ls --json --no-color | jq .alias
   changed_when: false

@@ -7,7 +7,7 @@ Firstly, we install the Actions Runner Controller in namespace `arc-owntube-syst
 
 ```bash
 export CONTROLLER_NAMESPACE=arc-owntube-systems
-microk8s helm3 install arc \
+microk8s helm3 install arc-owntube-controller \
     --namespace "${CONTROLLER_NAMESPACE}" \
     --create-namespace \
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
@@ -36,12 +36,16 @@ Now, configure a runner scale set:
 ```bash
 export INSTALLATION_NAME="arc-owntube-runner"
 export RUNNER_NAMESPACE=arc-owntube-runner
+export CONTROLLER_NAMESPACE=arc-owntube-systems
+export CONTROLLER_SERVICE_ACCOUNT_NAME=arc-owntube-controller-gha-rs-controller
 export GITHUB_CONFIG_URL="https://github.com/OwnTube-tv"
 microk8s helm install "${INSTALLATION_NAME}" \
     --namespace "${RUNNER_NAMESPACE}" \
     --create-namespace \
     --set githubConfigUrl="${GITHUB_CONFIG_URL}" \
     --set githubConfigSecret=pre-defined-secret \
+    --set controllerServiceAccount.name=$CONTROLLER_SERVICE_ACCOUNT_NAME \
+    --set controllerServiceAccount.namespace=$CONTROLLER_NAMESPACE \
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 ```
 
@@ -49,18 +53,18 @@ Run the following command to check your installation:
 
 ```bash
 microk8s helm list -A
-'NAME              	NAMESPACE          	...	STATUS  	CHART                                	APP VERSION'
-'arc               	arc-owntube-systems	...	deployed	gha-runner-scale-set-controller-0.9.3	0.9.3      '
-'arc-owntube-runner	arc-owntube-runner 	...	deployed	gha-runner-scale-set-0.9.3           	0.9.3      '
+'NAME                   	NAMESPACE          	...	STATUS  	CHART                                	APP VERSION'
+'arc-owntube-controller 	arc-owntube-systems	...	deployed	gha-runner-scale-set-controller-0.9.3	0.9.3      '
+'arc-owntube-runner     	arc-owntube-runner 	...	deployed	gha-runner-scale-set-0.9.3           	0.9.3      '
 ```
 
 Check the manager pod:
 
 ```bash
 microk8s kubectl get pods -n arc-owntube-systems
-'NAME                                     READY   STATUS    RESTARTS   AGE  '
-'arc-gha-rs-controller-66c95d466b-wb5rt   1/1     Running   0          3h21m'
-'arc-owntube-runner-79d95874-listener     1/1     Running   0          4m7s '
+'NAME                                                      	READY   STATUS    RESTARTS   AGE  '
+'arc-owntube-controller-gha-rs-controller-59c655f784-dzs84 	1/1     Running   0          3h21m'
+'arc-owntube-runner-79d95874-listener                      	1/1     Running   0          4m7s '
 ```
 
 Continue with the [Using runner scale sets](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/quickstart-for-actions-runner-controller#using-runner-scale-sets)

@@ -20,14 +20,14 @@ documentation.
 ```bash
 export APP_ID=996240
 # from https://github.com/organizations/OwnTube-tv/settings/installations/54793885
-export INSTALLATION_ID=54793885
+export APP_INSTALLATION_ID=54793885
 export APP_PRIVATE_KEY="$(cat arc-owntube-runner.2024-09-12.private-key.pem)"
 export RUNNER_NAMESPACE=arc-owntube-runner
 microk8s kubectl create namespace $RUNNER_NAMESPACE
 microk8s kubectl create secret generic pre-defined-secret \
    --namespace=$RUNNER_NAMESPACE \
    --from-literal=github_app_id=$APP_ID \
-   --from-literal=github_app_installation_id=$INSTALLATION_ID \
+   --from-literal=github_app_installation_id=$APP_INSTALLATION_ID \
    --from-literal=github_app_private_key="$APP_PRIVATE_KEY"
 ```
 
@@ -46,6 +46,10 @@ microk8s helm install "${INSTALLATION_NAME}" \
     --set githubConfigSecret=pre-defined-secret \
     --set controllerServiceAccount.name=$CONTROLLER_SERVICE_ACCOUNT_NAME \
     --set controllerServiceAccount.namespace=$CONTROLLER_NAMESPACE \
+    --set containerMode.type=kubernetes \
+    --set containerMode.kubernetesModeWorkVolumeClaim.accessModes={"ReadWriteOnce"} \
+    --set containerMode.kubernetesModeWorkVolumeClaim.storageClassName="microk8s-hostpath" \
+    --set containerMode.kubernetesModeWorkVolumeClaim.resources.requests.storage="1Gi" \
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 ```
 
@@ -53,9 +57,9 @@ Run the following command to check your installation:
 
 ```bash
 microk8s helm list -A
-'NAME                   	NAMESPACE          	...	STATUS  	CHART                                	APP VERSION'
-'arc-owntube-controller 	arc-owntube-systems	...	deployed	gha-runner-scale-set-controller-0.9.3	0.9.3      '
-'arc-owntube-runner     	arc-owntube-runner 	...	deployed	gha-runner-scale-set-0.9.3           	0.9.3      '
+'NAME                   	NAMESPACE          	...	CHART                                	APP VERSION'
+'arc-owntube-controller 	arc-owntube-systems	...	gha-runner-scale-set-controller-0.9.3	0.9.3      '
+'arc-owntube-runner     	arc-owntube-runner 	...	gha-runner-scale-set-0.9.3           	0.9.3      '
 ```
 
 Check the manager pod:

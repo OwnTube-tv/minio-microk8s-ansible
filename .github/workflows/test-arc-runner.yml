@@ -14,8 +14,8 @@ on:
 jobs:
   test-runner:
     runs-on: ${{ inputs.runner_name || 'arc-owntube-runner' }}
-    container:
-      image: node:20-bookworm
+    # container:
+    #   image: node:20-bookworm
 
     steps:
       - name: Check runner info

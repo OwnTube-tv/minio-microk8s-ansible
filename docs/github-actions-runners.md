@@ -3,11 +3,11 @@
 This setup guide follows the GitHub Docs on
 [GitHub Actions / Self-hosted runners / Actions Runner Controller / Quickstart](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/quickstart-for-actions-runner-controller).
 
-Firstly, we install the Actions Runner Controller in namespace `arc-owntube-systems`:
+Firstly, we install the Actions Runner Controller in namespace `arc-systems`:
 
 ```bash
-export CONTROLLER_NAMESPACE=arc-owntube-systems
-microk8s helm3 install arc-owntube-controller \
+export CONTROLLER_NAMESPACE=arc-systems
+microk8s helm3 install arc-controller \
     --namespace "${CONTROLLER_NAMESPACE}" \
     --create-namespace \
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
@@ -36,8 +36,8 @@ Now, configure a runner scale set:
 ```bash
 export INSTALLATION_NAME="arc-owntube-runner"
 export RUNNER_NAMESPACE=arc-owntube-runner
-export CONTROLLER_NAMESPACE=arc-owntube-systems
-export CONTROLLER_SERVICE_ACCOUNT_NAME=arc-owntube-controller-gha-rs-controller
+export CONTROLLER_NAMESPACE=arc-systems
+export CONTROLLER_SERVICE_ACCOUNT_NAME=arc-controller-gha-rs-controller
 export GITHUB_CONFIG_URL="https://github.com/OwnTube-tv"
 microk8s helm install "${INSTALLATION_NAME}" \
     --namespace "${RUNNER_NAMESPACE}" \
@@ -57,18 +57,18 @@ Run the following command to check your installation:
 
 ```bash
 microk8s helm list -A
-'NAME                   	NAMESPACE          	...	CHART                                	APP VERSION'
-'arc-owntube-controller 	arc-owntube-systems	...	gha-runner-scale-set-controller-0.9.3	0.9.3      '
-'arc-owntube-runner     	arc-owntube-runner 	...	gha-runner-scale-set-0.9.3           	0.9.3      '
+'NAME               	NAMESPACE          	...	CHART                                  	APP VERSION'
+'arc-controller     	arc-systems        	...	gha-runner-scale-set-controller-0.13.0 	0.13.0     '
+'arc-owntube-runner 	arc-owntube-runner 	...	gha-runner-scale-set-0.13.0            	0.13.0     '
 ```
 
 Check the manager pod:
 
 ```bash
-microk8s kubectl get pods -n arc-owntube-systems
-'NAME                                                      	READY   STATUS    RESTARTS   AGE  '
-'arc-owntube-controller-gha-rs-controller-59c655f784-dzs84 	1/1     Running   0          3h21m'
-'arc-owntube-runner-79d95874-listener                      	1/1     Running   0          4m7s '
+microk8s kubectl get pods -n arc-systems
+'NAME                                              	READY   STATUS    RESTARTS   AGE  '
+'arc-controller-gha-rs-controller-59c655f784-dzs84 	1/1     Running   0          3h21m'
+'arc-owntube-runner-79d95874-listener              	1/1     Running   0          4m7s '
 ```
 
 Continue with the [Using runner scale sets](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/quickstart-for-actions-runner-controller#using-runner-scale-sets)

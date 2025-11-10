@@ -6,4 +6,5 @@
 .idea/
 
 venv/
+*.local*
 .ansible_vault_password

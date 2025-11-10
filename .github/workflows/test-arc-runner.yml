@@ -1,0 +1,85 @@
+name: Test ARC Runner
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner_name:
+        description: 'Runner scale set to test'
+        required: false
+        default: 'arc-owntube-runner'
+        type: choice
+        options:
+          - arc-owntube-runner
+
+jobs:
+  test-runner:
+    runs-on: ${{ inputs.runner_name || 'arc-owntube-runner' }}
+    container:
+      image: node:20-bookworm
+
+    steps:
+      - name: Check runner info
+        run: |
+          echo "=== Runner Information ==="
+          echo "Runner name: $RUNNER_NAME"
+          echo "Runner OS: $RUNNER_OS"
+          echo "Runner arch: $RUNNER_ARCH"
+          echo "Hostname: $(hostname)"
+          echo ""
+
+      - name: Check system info
+        run: |
+          echo "=== System Information ==="
+          uname -a
+          echo ""
+          echo "=== CPU Info ==="
+          nproc
+          echo ""
+          echo "=== Memory Info ==="
+          free -h || echo "free command not available"
+          echo ""
+
+      - name: Check Kubernetes API access
+        run: |
+          echo "=== Kubernetes API Connectivity Test ==="
+          echo "Attempting unauthenticated request to Kubernetes API..."
+          echo ""
+
+          # Try to reach the Kubernetes API (will return 401/403 without auth, which is expected)
+          if curl -k -s -o /dev/null -w "HTTP Status: %{http_code}\n" https://kubernetes.default.svc/api --connect-timeout 5; then
+            echo "✓ Kubernetes API is reachable at https://kubernetes.default.svc"
+            echo "  (401/403 response is expected without authentication)"
+          else
+            echo "✗ Cannot reach Kubernetes API (this may be expected depending on network policies)"
+          fi
+
+          echo ""
+          echo "Full response (should show 401/403 Unauthorized/Forbidden):"
+          curl -k -s https://kubernetes.default.svc/api 2>&1 | head -20 || echo "Request failed"
+
+      - name: Check available tools
+        run: |
+          echo "=== Available Tools ==="
+          echo "Node.js: $(node --version)"
+          echo "npm: $(npm --version)"
+          echo "Git: $(git --version)"
+          echo "curl: $(curl --version | head -1)"
+
+      - name: Test checkout action
+        uses: actions/checkout@v4
+
+      - name: Verify repository checkout
+        run: |
+          echo "=== Repository Checkout Verification ==="
+          echo "Current directory: $(pwd)"
+          echo "Repository contents:"
+          ls -la
+          echo ""
+          echo "Git status:"
+          git status || echo "Not a git repository"
+
+      - name: Success message
+        run: |
+          echo "✅ Self-hosted ARC runner test completed successfully!"
+          echo ""
+          echo "Runner scale set '${{ inputs.runner_name || 'arc-owntube-runner' }}' is working correctly."

@@ -57,8 +57,11 @@ The initial setup steps for a live deployment are as follows:
     one of the MicroK8s cluster nodes:
 
     ```shell
-    kubectl get secret -n kube-system microk8s-dashboard-token \
-      -o jsonpath="{.data.token}" | base64 -d
+    # Generate a token valid for 1 year (Kubernetes 1.24+)
+    microk8s kubectl create token default -n kube-system --duration=8760h
+
+    # Or for a short-lived token (1 hour, default)
+    microk8s kubectl create token default -n kube-system
     ```
 
 3. Run the `2-minio-servers.yml` playbook to set up the MinIO S3 object storage service:

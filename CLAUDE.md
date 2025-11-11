@@ -84,8 +84,11 @@ ansible-playbook <playbook>.yml --syntax-check
 
 Access the Kubernetes dashboard:
 ```bash
-kubectl get secret -n kube-system microk8s-dashboard-token \
-  -o jsonpath="{.data.token}" | base64 -d
+# Generate a token valid for 1 year (Kubernetes 1.24+)
+microk8s kubectl create token default -n kube-system --duration=8760h
+
+# Or for a short-lived token (1 hour, default)
+microk8s kubectl create token default -n kube-system
 ```
 
 Check runner pods:

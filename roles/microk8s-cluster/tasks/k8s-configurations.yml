@@ -32,4 +32,10 @@
     state: present
   tags: microk8s-cluster
 
+- name: Create long-lived token secret for Kubernetes Dashboard (K8s 1.24+)
+  kubernetes.core.k8s:
+    definition: "{{ lookup('file', 'k8s-dashboard-token.yml') | from_yaml }}"
+    state: present
+  tags: microk8s-cluster
+
 ...

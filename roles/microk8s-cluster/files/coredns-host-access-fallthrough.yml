@@ -17,7 +17,7 @@ data:
         log . {
           class error
         }
-        hosts custom.hosts host.local {
+        hosts {
           10.0.1.1 host.local
           fallthrough
         }

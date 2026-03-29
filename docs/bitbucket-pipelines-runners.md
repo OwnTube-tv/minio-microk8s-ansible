@@ -54,8 +54,8 @@ done
 # (survives hostname changes)
 microk8s kubectl label node a12a.mabl.online  bitbucket-runner=1
 microk8s kubectl label node a12b.mabl.online  bitbucket-runner=2
-microk8s kubectl label node v1517a.mabl.online bitbucket-runner=3
-microk8s kubectl label node v1517b.mabl.online bitbucket-runner=4
+microk8s kubectl label node a12c.mabl.online  bitbucket-runner=3
+microk8s kubectl label node a12d.mabl.online  bitbucket-runner=4
 ```
 
 ## Step 3: Deploy the runners
@@ -175,8 +175,8 @@ pipelines:
 |--------------------|----------------------|----------------------|--------------------------|---------------|---------------|
 | bitbucket-runner-1 | a12a                 | `bitbucket-runner=1` | bitbucket-runner-creds-1 | 100m / 8      | 256Mi / 8Gi   |
 | bitbucket-runner-2 | a12b                 | `bitbucket-runner=2` | bitbucket-runner-creds-2 | 100m / 8      | 256Mi / 8Gi   |
-| bitbucket-runner-3 | v1517a (future a12c) | `bitbucket-runner=3` | bitbucket-runner-creds-3 | 100m / 8      | 256Mi / 8Gi   |
-| bitbucket-runner-4 | v1517b (future a12d) | `bitbucket-runner=4` | bitbucket-runner-creds-4 | 100m / 8      | 256Mi / 8Gi   |
+| bitbucket-runner-3 | a12c                 | `bitbucket-runner=3` | bitbucket-runner-creds-3 | 100m / 8      | 256Mi / 8Gi   |
+| bitbucket-runner-4 | a12d                 | `bitbucket-runner=4` | bitbucket-runner-creds-4 | 100m / 8      | 256Mi / 8Gi   |
 
 ## Architecture notes
 
@@ -189,7 +189,7 @@ pipelines:
 - **Why not a DaemonSet?** Each runner needs a unique `RUNNER_UUID` / OAuth secret.
   DaemonSets apply the same spec to every node.
 - **Why `nodeSelector` on labels, not hostnames?** Node labels survive hostname
-  changes. When v1517a/b are renamed to a12c/d, the `bitbucket-runner` label
+  changes (e.g. v1517a/b were renamed to a12c/d). The `bitbucket-runner` label
   stays — no deployment changes needed.
 - **Why explicit `requests`?** Kubernetes defaults requests to limits if omitted.
   Without explicit small requests, each pod would reserve 8 CPUs.

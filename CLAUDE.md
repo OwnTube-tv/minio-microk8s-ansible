@@ -11,7 +11,7 @@ This Ansible project deploys and manages the S3 object storage infrastructure th
 - **OwnTube.tv** ([github.com/OwnTube-tv/web-client](https://github.com/OwnTube-tv/web-client)) is a portable video client for PeerTube (decentralized video hosting platform) built with React Native/Expo
 - **This repository** provides the S3 storage backend infrastructure for video content and static assets
 - **Infrastructure owner:** OwnTube Nordic AB (Swedish org. number: 559517-7196), Stockholm, Sweden
-- **Physical location:** 4 servers at two sites in Sweden (a12 and v1517)
+- **Physical location:** 4 servers at two sub-sites in Sweden (a12a and a12b, formerly a12 and v1517)
 - **Total storage capacity:** 64 TB raw across 4 nodes (32 TB usable with MinIO distributed mode)
 
 ## Development Environment Setup
@@ -105,12 +105,15 @@ microk8s helm list -A
 
 ### Physical Infrastructure
 
-Four physical servers (see `docs/hardware.md` for complete specs):
+Four physical servers across two sub-sites on the same Bredband2 fiber, connected via IPsec VPN (IKEv2) between ER7206 routers (see `docs/hardware.md` for complete specs):
 
+**Site a12a** (192.168.1.0/24):
 - **minio1 (a12a.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA)
 - **minio2 (a12b.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA)
-- **minio3 (v1517a.mabl.online):** AMD Ryzen 9, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA)
-- **minio4 (v1517b.mabl.online):** AMD Ryzen 7, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA)
+
+**Site a12b** (192.168.3.0/24, formerly v1517, relocated 2026-03-27):
+- **minio3 (a12c.mabl.online):** AMD Ryzen 9, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA)
+- **minio4 (a12d.mabl.online):** AMD Ryzen 7, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA)
 
 Each server has two LVM Volume Groups:
 - `ubuntu-vg` (8TB): M.2 NVMe storage for OS and fast access
@@ -226,6 +229,10 @@ See `docs/github-actions-runners.md` for installation and verification steps.
 
 ## Important Implementation Notes
 
+### Documentation Maintenance
+
+- **Always check and update `README.md`** when making infrastructure changes. The README is the primary getting-started guide and must not become outdated. After modifying playbooks, inventory, architecture, or documentation in `docs/`, review `README.md` for any sections that need corresponding updates.
+
 ### Ansible Best Practices
 
 - Always use FQCN (Fully Qualified Collection Name) for modules: `ansible.builtin.user`, `community.general.snap`, `ansible.posix.authorized_key`
@@ -248,13 +255,16 @@ See `docs/github-actions-runners.md` for installation and verification steps.
 - **Designated master:** First node alphabetically always acts as initial master for add-on enablement
 - **LVM volume groups:** Assumes pre-existing `ubuntu-vg` and `minio-vg` on all nodes
 - **DNS records:** Assumes external DNS configured for `*.owntube.tv` pointing to cluster ingress
+- **Cluster recovery:** After network changes or server relocation, stale kube-proxy iptables may cause cascading pod failures. Reliable fix: rolling `microk8s stop && microk8s start` on all nodes
+- **UPS protection:** Dual-UPS chain (EcoFlow RIVER 3 Plus Max 858Wh + APC BX750MI-GR) powers all servers and networking. ~140W load, ~5.5h runtime on battery. A UPS failure previously caused a major cluster outage.
+- **Public IP NAT:** 1:1 NAT configured for .206 (a12a), .208 (a12b), .207 (a12c), .209 (a12d). IP .210 is available but not yet allocated.
 
 ### Known Hardware Quirks
 
 See `docs/hacks-and-troubleshooting.md` for details:
 
-**Realtek r8125 NIC drivers (minio3 and minio4):**
-- Servers at v1517 site have 2.5 GbE NICs with problematic Ubuntu drivers
+**Realtek r8125 NIC drivers (a12c and a12d):**
+- Servers a12c/a12d (formerly at v1517 site) have 2.5 GbE NICs with problematic Ubuntu drivers
 - Custom systemd service `ar9708-r8125-hack.service` reinstalls Realtek drivers on each boot
 - Without this hack, NICs freeze after several days of uptime
 - Driver source: `/root/r8125-9.012.04/` (extracted from Realtek tarball)
@@ -296,6 +306,7 @@ OwnTube enables "many branded apps with few users each" rather than "one app wit
 
 - **`docs/hardware.md`:** Complete hardware specifications for all 4 MinIO servers
 - **`docs/github-actions-runners.md`:** Self-hosted GitHub Actions runner installation and verification
+- **`docs/bitbucket-pipelines-runners.md`:** Bitbucket Pipelines self-hosted runner setup for Xyz Inc.
 - **`docs/hacks-and-troubleshooting.md`:** Hardware quirks and reproducible workarounds
 - **`README.md`:** Getting started guide, deployment walkthrough, Auth0 OIDC setup
 

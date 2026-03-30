@@ -15,12 +15,12 @@ This document analyzes the deployment of Harbor container registry on the OwnTub
 
 ### Hardware per Node (4 nodes total)
 
-| Component | Specification | Current Usage |
-|-----------|--------------|---------------|
-| **CPU** | Intel i5-1340P / AMD Ryzen 9/7 | Kubernetes workloads |
-| **RAM** | 64 GB | ~16-20 GB used |
-| **M.2 NVMe** | 8 TB (7.27 TB usable) | 90 GB OS, **7.18 TB free** |
-| **SATA SSD** | 8 TB (7.28 TB usable) | 6.4 TB MinIO data (87% used) |
+| Component    | Specification                  | Current Usage                |
+|--------------|--------------------------------|------------------------------|
+| **CPU**      | Intel i5-1340P / AMD Ryzen 9/7 | Kubernetes workloads         |
+| **RAM**      | 64 GB                          | ~16-20 GB used               |
+| **M.2 NVMe** | 8 TB (7.27 TB usable)          | 90 GB OS, **7.18 TB free**   |
+| **SATA SSD** | 8 TB (7.28 TB usable)          | 6.4 TB MinIO data (87% used) |
 
 ### Storage Analysis
 
@@ -60,20 +60,20 @@ Current Usage: Only 90 GB for OS (ubuntu-vg/ubuntu-lv)
 │           MicroK8s Cluster (4 nodes)                │
 ├─────────────────────────────────────────────────────┤
 │                                                     │
-│  ┌───────────────┐         ┌──────────────────┐   │
-│  │   Harbor      │────────>│  Rook-Ceph RGW   │   │
-│  │  (Registry)   │   S3    │  (Object Gateway)│   │
-│  └───────────────┘         └──────────────────┘   │
-│         │                           │              │
-│         │                    ┌──────┴──────┐       │
+│  ┌───────────────┐         ┌──────────────────┐     │
+│  │   Harbor      │────────>│  Rook-Ceph RGW   │     │
+│  │  (Registry)   │   S3    │  (Object Gateway)│     │
+│  └───────────────┘         └──────────────────┘     │
+│         │                           │               │
+│         │                    ┌──────┴──────┐        │
 │         │                    │   Ceph OSDs  │       │
 │         │                    │  (4 × 7TB)   │       │
 │         │                    └──────────────┘       │
 │         │                                           │
-│  ┌──────┴───────┐                                  │
-│  │  MinIO S3    │  (Unchanged - Video Storage)     │
-│  │  (4 × 6.4TB) │                                  │
-│  └──────────────┘                                  │
+│  ┌──────┴───────┐                                   │
+│  │  MinIO S3    │  (Unchanged - Video Storage)      │
+│  │  (4 × 6.4TB) │                                   │
+│  └──────────────┘                                   │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -111,12 +111,12 @@ Trade-off: Higher capacity, slower rebuild on failures
 
 #### Ceph Daemons per Node
 
-| Daemon | Count | RAM per Instance | CPU | Purpose |
-|--------|-------|------------------|-----|---------|
-| **OSD** | 1 | 2-4 GB | 0.5-1 core | Object Storage Device |
-| **MON** | 1 (3 total) | 1-2 GB | 0.2 core | Cluster Monitor |
-| **MGR** | 1 (2 total) | 1-2 GB | 0.2 core | Manager/Dashboard |
-| **RGW** | 1-2 | 2-4 GB | 0.5 core | S3 Gateway |
+| Daemon  | Count       | RAM per Instance | CPU        | Purpose               |
+|---------|-------------|------------------|------------|-----------------------|
+| **OSD** | 1           | 2-4 GB           | 0.5-1 core | Object Storage Device |
+| **MON** | 1 (3 total) | 1-2 GB           | 0.2 core   | Cluster Monitor       |
+| **MGR** | 1 (2 total) | 1-2 GB           | 0.2 core   | Manager/Dashboard     |
+| **RGW** | 1-2         | 2-4 GB           | 0.5 core   | S3 Gateway            |
 
 **Total per Node:** ~6-10 GB RAM, ~1.5-2 CPU cores
 
@@ -126,18 +126,18 @@ Trade-off: Higher capacity, slower rebuild on failures
 
 ## Rook-Ceph vs MinIO Comparison
 
-| Feature | Rook-Ceph (OSS) | MinIO (OSS) | MinIO Enterprise |
-|---------|-----------------|-------------|------------------|
-| **Prometheus Metrics** | ✅ Native | ⚠️ Limited | ✅ Full |
-| **Grafana Dashboards** | ✅ Included | ❌ Manual | ✅ Included |
-| **Web UI** | ✅ Ceph Dashboard | ✅ MinIO Console | ✅ Enhanced |
-| **Multi-site Replication** | ✅ RGW Sync | ❌ | ✅ Site Replication |
-| **Erasure Coding** | ✅ Flexible (k+m) | ✅ Fixed schemes | ✅ Advanced |
-| **Object Versioning** | ✅ S3 compatible | ✅ S3 compatible | ✅ Enhanced |
-| **IAM / Access Control** | ✅ Keystone/LDAP | ✅ Basic | ✅ Advanced RBAC |
-| **Encryption at Rest** | ✅ LUKS/dm-crypt | ❌ | ✅ KMS integration |
-| **Tiering (Hot/Cold)** | ✅ Cache tiers | ❌ | ✅ Lifecycle |
-| **Cost** | **Free** | **Free** | **$$$** |
+| Feature                    | Rook-Ceph (OSS)  | MinIO (OSS)     | MinIO Enterprise   |
+|----------------------------|------------------|-----------------|--------------------|
+| **Prometheus Metrics**     | ✅ Native         | ⚠️ Limited      | ✅ Full             |
+| **Grafana Dashboards**     | ✅ Included       | ❌ Manual        | ✅ Included         |
+| **Web UI**                 | ✅ Ceph Dashboard | ✅ MinIO Console | ✅ Enhanced         |
+| **Multi-site Replication** | ✅ RGW Sync       | ❌               | ✅ Site Replication |
+| **Erasure Coding**         | ✅ Flexible (k+m) | ✅ Fixed schemes | ✅ Advanced         |
+| **Object Versioning**      | ✅ S3 compatible  | ✅ S3 compatible | ✅ Enhanced         |
+| **IAM / Access Control**   | ✅ Keystone/LDAP  | ✅ Basic         | ✅ Advanced RBAC    |
+| **Encryption at Rest**     | ✅ LUKS/dm-crypt  | ❌               | ✅ KMS integration  |
+| **Tiering (Hot/Cold)**     | ✅ Cache tiers    | ❌               | ✅ Lifecycle        |
+| **Cost**                   | **Free**         | **Free**        | **$$$**            |
 
 **Key Advantages of Ceph for this Use Case:**
 1. **Better operational visibility** - Built-in Prometheus exporters, detailed metrics
@@ -315,13 +315,13 @@ registry:
 
 ### Infrastructure Costs
 
-| Item | Current (MinIO) | With Ceph Addition | Incremental |
-|------|----------------|-------------------|-------------|
-| **Hardware** | Paid (4 servers) | Same | $0 |
-| **Storage Capacity** | 32 TB usable (SATA) | +18 TB usable (NVMe) | $0 |
-| **Licensing** | $0 (OSS) | $0 (OSS) | $0 |
-| **Power/Cooling** | ~$200/month | ~$220/month | +$20/month |
-| **Monitoring Tools** | Limited | Enterprise-grade | $0 |
+| Item                 | Current (MinIO)     | With Ceph Addition   | Incremental |
+|----------------------|---------------------|----------------------|-------------|
+| **Hardware**         | Paid (4 servers)    | Same                 | $0          |
+| **Storage Capacity** | 32 TB usable (SATA) | +18 TB usable (NVMe) | $0          |
+| **Licensing**        | $0 (OSS)            | $0 (OSS)             | $0          |
+| **Power/Cooling**    | ~$200/month         | ~$220/month          | +$20/month  |
+| **Monitoring Tools** | Limited             | Enterprise-grade     | $0          |
 
 ### Operational Benefits
 
@@ -340,21 +340,21 @@ registry:
 
 ### Technical Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| **Ceph learning curve** | Medium | Low | Excellent documentation, CNCF community |
-| **Resource contention** | Low | Medium | Monitor RAM/CPU, adjust if needed |
-| **Data loss (4 node cluster)** | Low | High | Regular backups, customer keeps JFrog copy |
-| **Network bottleneck** | Low | Low | 2.5 GbE links sufficient for registry |
-| **Disk failure** | Medium | Low | Erasure coding handles 1 disk failure |
+| Risk                           | Likelihood | Impact | Mitigation                                 |
+|--------------------------------|------------|--------|--------------------------------------------|
+| **Ceph learning curve**        | Medium     | Low    | Excellent documentation, CNCF community    |
+| **Resource contention**        | Low        | Medium | Monitor RAM/CPU, adjust if needed          |
+| **Data loss (4 node cluster)** | Low        | High   | Regular backups, customer keeps JFrog copy |
+| **Network bottleneck**         | Low        | Low    | 2.5 GbE links sufficient for registry      |
+| **Disk failure**               | Medium     | Low    | Erasure coding handles 1 disk failure      |
 
 ### Operational Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| **Increased complexity** | High | Medium | Document procedures, use Ansible for automation |
-| **Support burden** | Medium | Medium | SLA with customer, clear escalation path |
-| **Backup failures** | Low | High | Automated testing, monitoring alerts |
+| Risk                     | Likelihood | Impact | Mitigation                                      |
+|--------------------------|------------|--------|-------------------------------------------------|
+| **Increased complexity** | High       | Medium | Document procedures, use Ansible for automation |
+| **Support burden**       | Medium     | Medium | SLA with customer, clear escalation path        |
+| **Backup failures**      | Low        | High   | Automated testing, monitoring alerts            |
 
 **Overall Risk Level:** **MEDIUM-LOW** - Acceptable for production deployment with proper planning.
 
@@ -402,16 +402,16 @@ registry:
 
 This deployment provides **free alternatives** to MinIO Enterprise features:
 
-| MinIO Enterprise | Ceph OSS Equivalent |
-|------------------|---------------------|
-| Prometheus metrics | ✅ Native Ceph exporter |
-| Grafana dashboards | ✅ Community dashboards (IDs: 2842, 5336, 5342) |
-| Multi-site replication | ✅ RGW multi-site sync |
-| KMS encryption | ✅ dm-crypt / LUKS at rest |
-| Lifecycle policies | ✅ RGW lifecycle (S3 compatible) |
-| Health monitoring | ✅ Ceph health system |
-| Audit logging | ✅ RGW ops log |
-| Advanced RBAC | ✅ Keystone integration (optional) |
+| MinIO Enterprise       | Ceph OSS Equivalent                            |
+|------------------------|------------------------------------------------|
+| Prometheus metrics     | ✅ Native Ceph exporter                         |
+| Grafana dashboards     | ✅ Community dashboards (IDs: 2842, 5336, 5342) |
+| Multi-site replication | ✅ RGW multi-site sync                          |
+| KMS encryption         | ✅ dm-crypt / LUKS at rest                      |
+| Lifecycle policies     | ✅ RGW lifecycle (S3 compatible)                |
+| Health monitoring      | ✅ Ceph health system                           |
+| Audit logging          | ✅ RGW ops log                                  |
+| Advanced RBAC          | ✅ Keystone integration (optional)              |
 
 **Estimated License Savings:** $10,000 - $20,000/year (MinIO Enterprise subscription)
 

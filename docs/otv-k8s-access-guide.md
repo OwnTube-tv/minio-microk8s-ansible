@@ -72,21 +72,21 @@ ssh -f -N -L 16443:192.168.1.6:16443 -p 622 owntube_ansible@83.233.237.206
 
 Once you run `k9s`:
 
-| Key | Action |
-|-----|--------|
-| `:` | Command mode |
-| `:pods` | View pods |
-| `:deploy` | View deployments |
-| `:svc` | View services |
-| `:ns` | View namespaces |
-| `Ctrl+a` | Show all namespaces |
-| `0` | Show all namespaces (shortcut) |
-| `/` | Filter/search |
-| `l` | View logs of selected pod |
-| `d` | Describe selected resource |
-| `e` | Edit selected resource |
-| `?` | Help |
-| `:q` or `Ctrl+c` | Quit |
+| Key              | Action                         |
+|------------------|--------------------------------|
+| `:`              | Command mode                   |
+| `:pods`          | View pods                      |
+| `:deploy`        | View deployments               |
+| `:svc`           | View services                  |
+| `:ns`            | View namespaces                |
+| `Ctrl+a`         | Show all namespaces            |
+| `0`              | Show all namespaces (shortcut) |
+| `/`              | Filter/search                  |
+| `l`              | View logs of selected pod      |
+| `d`              | Describe selected resource     |
+| `e`              | Edit selected resource         |
+| `?`              | Help                           |
+| `:q` or `Ctrl+c` | Quit                           |
 
 **Navigate:**
 - `↑/↓` or `j/k` - Move selection

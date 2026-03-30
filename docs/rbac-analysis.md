@@ -109,14 +109,14 @@ The cluster demonstrates **hybrid RBAC implementation**:
 
 **Workload Classification:**
 
-| Workload Type | Runs In K8s | RBAC Status | Post-Enforcement Status |
-|--------------|-------------|-------------|-------------------------|
-| MinIO servers | No (systemd) | N/A | ✓ Unaffected (runs outside K8s) |
-| MinIO ingress | Yes (ExternalName) | ✗ Uses default SA | ⚠️ Needs dedicated SA |
-| ARC runners | Yes (ephemeral pods) | ✓ Proper RBAC | ✓ Continues working |
-| Dashboard | Yes (pod) | ✗ Uses default SA | ⚠️ Needs dedicated SA |
-| Ingress/cert-manager | Yes (DaemonSet/Deployment) | ✓ Proper RBAC | ✓ Continues working |
-| Admin users (ar9708, mblomdahl) | External (kubectl) | ✓ Proper RBAC | ✓ Continues working |
+| Workload Type                   | Runs In K8s                | RBAC Status       | Post-Enforcement Status         |
+|---------------------------------|----------------------------|-------------------|---------------------------------|
+| MinIO servers                   | No (systemd)               | N/A               | ✓ Unaffected (runs outside K8s) |
+| MinIO ingress                   | Yes (ExternalName)         | ✗ Uses default SA | ⚠️ Needs dedicated SA           |
+| ARC runners                     | Yes (ephemeral pods)       | ✓ Proper RBAC     | ✓ Continues working             |
+| Dashboard                       | Yes (pod)                  | ✗ Uses default SA | ⚠️ Needs dedicated SA           |
+| Ingress/cert-manager            | Yes (DaemonSet/Deployment) | ✓ Proper RBAC     | ✓ Continues working             |
+| Admin users (ar9708, mblomdahl) | External (kubectl)         | ✓ Proper RBAC     | ✓ Continues working             |
 
 **Key Observation:** Most components already have proper RBAC. Only Dashboard and default service accounts need remediation.
 
@@ -172,11 +172,11 @@ The cluster demonstrates **hybrid RBAC implementation**:
 
 **CIS Benchmark Status (Pre-RBAC):**
 
-| Control | Description | Status | Severity |
-|---------|-------------|--------|----------|
-| 5.1.5 | Ensure default service accounts are not actively used | ❌ FAIL | HIGH |
-| 5.1.6 | Ensure Service Account Tokens are only mounted where necessary | ❌ FAIL | MEDIUM |
-| 5.1.3 | Minimize wildcard use in Roles and ClusterRoles | ⚠️ PARTIAL | HIGH |
+| Control | Description                                                    | Status     | Severity |
+|---------|----------------------------------------------------------------|------------|----------|
+| 5.1.5   | Ensure default service accounts are not actively used          | ❌ FAIL     | HIGH     |
+| 5.1.6   | Ensure Service Account Tokens are only mounted where necessary | ❌ FAIL     | MEDIUM   |
+| 5.1.3   | Minimize wildcard use in Roles and ClusterRoles                | ⚠️ PARTIAL | HIGH     |
 
 **Post-RBAC Compliance Gap:** ~30% → **~5%** (only edge cases remain)
 
@@ -265,12 +265,12 @@ This aligns with security best practices and makes permission reviews straightfo
 
 ### 3.3 Business Value
 
-| Benefit | Quantified Impact | Business Value |
-|---------|-------------------|----------------|
-| Reduced security incidents | -75% potential breach scenarios | €5,000-€50,000 saved incident response costs |
-| Compliance readiness | +25% CIS benchmark compliance | Enables SOC2/ISO 27001 certification |
-| Customer confidence | "Security by design" posture | Competitive advantage for OwnTube.tv platform |
-| Minimal operational overhead | Simple one-command enablement | Low barrier to implementation |
+| Benefit                      | Quantified Impact               | Business Value                                |
+|------------------------------|---------------------------------|-----------------------------------------------|
+| Reduced security incidents   | -75% potential breach scenarios | €5,000-€50,000 saved incident response costs  |
+| Compliance readiness         | +25% CIS benchmark compliance   | Enables SOC2/ISO 27001 certification          |
+| Customer confidence          | "Security by design" posture    | Competitive advantage for OwnTube.tv platform |
+| Minimal operational overhead | Simple one-command enablement   | Low barrier to implementation                 |
 
 ---
 
@@ -302,13 +302,13 @@ The `microk8s enable rbac` command performs the following actions:
 
 ### 4.2 Advantages Over Manual Configuration
 
-| Aspect | Manual Configuration | MicroK8s RBAC Add-on |
-|--------|---------------------|----------------------|
-| **Enablement** | Edit files, restart services manually | Single command: `microk8s enable rbac` |
-| **Complexity** | HIGH (requires understanding of systemd, snap services) | LOW (abstracted by add-on) |
-| **Error Potential** | HIGH (typos, incorrect flags) | LOW (tested by MicroK8s team) |
-| **Rollback** | Manually revert file changes | `microk8s disable rbac` (but deletes resources ⚠️) |
-| **Support** | DIY | Official MicroK8s feature, community-supported |
+| Aspect              | Manual Configuration                                    | MicroK8s RBAC Add-on                               |
+|---------------------|---------------------------------------------------------|----------------------------------------------------|
+| **Enablement**      | Edit files, restart services manually                   | Single command: `microk8s enable rbac`             |
+| **Complexity**      | HIGH (requires understanding of systemd, snap services) | LOW (abstracted by add-on)                         |
+| **Error Potential** | HIGH (typos, incorrect flags)                           | LOW (tested by MicroK8s team)                      |
+| **Rollback**        | Manually revert file changes                            | `microk8s disable rbac` (but deletes resources ⚠️) |
+| **Support**         | DIY                                                     | Official MicroK8s feature, community-supported     |
 
 **Recommendation:** Use the MicroK8s RBAC add-on for simplicity and reliability.
 
@@ -349,22 +349,22 @@ After enabling RBAC:
 
 The RBAC add-on reduces complexity from MEDIUM (manual configuration) to **LOW-MEDIUM** (add-on):
 
-| Task | Complexity Without Add-on | Complexity With Add-on |
-|------|---------------------------|------------------------|
-| Enable RBAC | HIGH (edit args, restart services) | LOW (one command) |
-| Test RBAC enforcement | MEDIUM | LOW (same) |
-| Rollback if needed | HIGH (manual revert) | MEDIUM (disable command, but destructive) |
+| Task                  | Complexity Without Add-on          | Complexity With Add-on                    |
+|-----------------------|------------------------------------|-------------------------------------------|
+| Enable RBAC           | HIGH (edit args, restart services) | LOW (one command)                         |
+| Test RBAC enforcement | MEDIUM                             | LOW (same)                                |
+| Rollback if needed    | HIGH (manual revert)               | MEDIUM (disable command, but destructive) |
 
 #### **5.1.2 Workload-Specific Complexity**
 
-| Workload | Complexity | Reasoning |
-|----------|-----------|-----------|
-| ARC runners | ✓ Already done | Proper RBAC already configured by Helm chart |
-| Ingress/cert-manager | ✓ Already done | Deployed with proper service accounts |
-| Admin users | ✓ Already done | Already have ClusterRoleBinding to `admin` role |
-| Dashboard | 🟡 Medium | Needs dedicated SA, update token generation |
-| Default SAs | 🟢 Low | Disable auto-mount, confirm zero permissions |
-| MinIO ingress | 🟢 Low | Minimal permissions needed (Services, Endpoints read-only) |
+| Workload             | Complexity     | Reasoning                                                  |
+|----------------------|----------------|------------------------------------------------------------|
+| ARC runners          | ✓ Already done | Proper RBAC already configured by Helm chart               |
+| Ingress/cert-manager | ✓ Already done | Deployed with proper service accounts                      |
+| Admin users          | ✓ Already done | Already have ClusterRoleBinding to `admin` role            |
+| Dashboard            | 🟡 Medium      | Needs dedicated SA, update token generation                |
+| Default SAs          | 🟢 Low         | Disable auto-mount, confirm zero permissions               |
+| MinIO ingress        | 🟢 Low         | Minimal permissions needed (Services, Endpoints read-only) |
 
 **Most Workloads Already Compliant:** ~80% of workloads already have proper RBAC.
 
@@ -439,13 +439,13 @@ The RBAC add-on reduces complexity from MEDIUM (manual configuration) to **LOW-M
 
 #### **Implementation Costs:**
 
-| Cost Category | Effort (hours) | Rate (€/hr) | Total (€) |
-|---------------|----------------|-------------|-----------|
-| Planning & Preparation | 2.5 | 75 | 188 |
-| RBAC Enforcement | 1.5 | 75 | 113 |
-| Testing & Validation | 1.5 | 75 | 113 |
-| Documentation | 0.5 | 75 | 38 |
-| **Total Initial** | **6** | **75** | **450** |
+| Cost Category          | Effort (hours) | Rate (€/hr) | Total (€) |
+|------------------------|----------------|-------------|-----------|
+| Planning & Preparation | 2.5            | 75          | 188       |
+| RBAC Enforcement       | 1.5            | 75          | 113       |
+| Testing & Validation   | 1.5            | 75          | 113       |
+| Documentation          | 0.5            | 75          | 38        |
+| **Total Initial**      | **6**          | **75**      | **450**   |
 
 **Ongoing Annual Costs:**
 - Quarterly audits: 4 × 1 hour = 4 hours/year = €300/year
@@ -454,13 +454,13 @@ The RBAC add-on reduces complexity from MEDIUM (manual configuration) to **LOW-M
 
 #### **Risk Mitigation Value:**
 
-| Risk Scenario | Annual Probability | Impact Cost (€) | Risk Reduction | Annual Value (€) |
-|---------------|-------------------|-----------------|----------------|------------------|
-| Data breach (credential theft) | 5% | 50,000 | 75% | 1,875 |
-| Crypto mining attack | 10% | 5,000 | 90% | 450 |
-| Service disruption | 8% | 10,000 | 60% | 480 |
-| Compliance penalties | 3% | 20,000 | 90% | 540 |
-| **Total Annual Risk Mitigation Value** | | | | **3,345** |
+| Risk Scenario                          | Annual Probability | Impact Cost (€) | Risk Reduction | Annual Value (€) |
+|----------------------------------------|--------------------|-----------------|----------------|------------------|
+| Data breach (credential theft)         | 5%                 | 50,000          | 75%            | 1,875            |
+| Crypto mining attack                   | 10%                | 5,000           | 90%            | 450              |
+| Service disruption                     | 8%                 | 10,000          | 60%            | 480              |
+| Compliance penalties                   | 3%                 | 20,000          | 90%            | 540              |
+| **Total Annual Risk Mitigation Value** |                    |                 |                | **3,345**        |
 
 **Net Annual Benefit (Year 1):** €3,345 - €450 - €345 = **€2,550 positive**
 **Net Annual Benefit (Year 2+):** €3,345 - €345 = **€3,000 positive**
@@ -813,46 +813,46 @@ sudo microk8s kubectl get pods --all-namespaces
 
 ### 8.1 Advantages of Implementation
 
-| Advantage | Description | Impact Level |
-|-----------|-------------|--------------|
-| **Simple Enablement** | Single command (`microk8s enable rbac`) | HIGH |
-| **Defense in Depth** | Adds critical authorization layer to security posture | HIGH |
-| **Compliance Readiness** | +25% CIS benchmark compliance improvement | MEDIUM-HIGH |
-| **Attack Surface Reduction** | ~75% reduction in lateral movement potential | HIGH |
-| **Low Ongoing Overhead** | Most workloads already compliant | HIGH |
-| **Future-Proofing** | Enables safe multi-tenancy for future use cases | MEDIUM |
+| Advantage                    | Description                                           | Impact Level |
+|------------------------------|-------------------------------------------------------|--------------|
+| **Simple Enablement**        | Single command (`microk8s enable rbac`)               | HIGH         |
+| **Defense in Depth**         | Adds critical authorization layer to security posture | HIGH         |
+| **Compliance Readiness**     | +25% CIS benchmark compliance improvement             | MEDIUM-HIGH  |
+| **Attack Surface Reduction** | ~75% reduction in lateral movement potential          | HIGH         |
+| **Low Ongoing Overhead**     | Most workloads already compliant                      | HIGH         |
+| **Future-Proofing**          | Enables safe multi-tenancy for future use cases       | MEDIUM       |
 
 ### 8.2 Disadvantages and Costs
 
-| Disadvantage | Description | Mitigation |
-|--------------|-------------|------------|
-| **Initial Effort** | 4-7 hours implementation time | Simple add-on reduces complexity significantly |
-| **Brief Downtime** | ~10 seconds API server restart during enablement | Schedule during low-traffic window |
-| **Semi-Permanent** | Disabling RBAC destroys resources | Treat as one-way operation, maintain backups |
-| **Potential Breakage** | Misconfigured RBAC can block legitimate operations | Thorough preparation phase validates all workloads |
-| **Dashboard Requires New Token** | Current token needs replacement | New token generated in Step 6 |
+| Disadvantage                     | Description                                        | Mitigation                                         |
+|----------------------------------|----------------------------------------------------|----------------------------------------------------|
+| **Initial Effort**               | 4-7 hours implementation time                      | Simple add-on reduces complexity significantly     |
+| **Brief Downtime**               | ~10 seconds API server restart during enablement   | Schedule during low-traffic window                 |
+| **Semi-Permanent**               | Disabling RBAC destroys resources                  | Treat as one-way operation, maintain backups       |
+| **Potential Breakage**           | Misconfigured RBAC can block legitimate operations | Thorough preparation phase validates all workloads |
+| **Dashboard Requires New Token** | Current token needs replacement                    | New token generated in Step 6                      |
 
 ### 8.3 Risk Analysis Summary
 
 #### **Risks of Implementation**
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| **Brief API server unavailability** | HIGH | LOW | Schedule during maintenance window, ~10 seconds downtime |
-| **Dashboard becomes temporarily inaccessible** | MEDIUM | LOW | New token generated immediately after enablement |
-| **ARC runners fail** | LOW | MEDIUM | Already have proper RBAC, extensively tested |
-| **Unknown workload breaks** | LOW | MEDIUM | Audit phase identifies all workloads, backup available |
+| Risk                                           | Likelihood | Impact | Mitigation                                               |
+|------------------------------------------------|------------|--------|----------------------------------------------------------|
+| **Brief API server unavailability**            | HIGH       | LOW    | Schedule during maintenance window, ~10 seconds downtime |
+| **Dashboard becomes temporarily inaccessible** | MEDIUM     | LOW    | New token generated immediately after enablement         |
+| **ARC runners fail**                           | LOW        | MEDIUM | Already have proper RBAC, extensively tested             |
+| **Unknown workload breaks**                    | LOW        | MEDIUM | Audit phase identifies all workloads, backup available   |
 
 **Overall Implementation Risk: LOW** (manageable with preparation and backup)
 
 #### **Risks of NOT Implementing**
 
-| Risk | Likelihood | Impact | Severity |
-|------|-----------|--------|----------|
-| **Pod compromise → full cluster access** | MEDIUM | CRITICAL | **HIGH** |
-| **Dashboard vulnerability exploitation** | LOW-MEDIUM | CRITICAL | **MEDIUM-HIGH** |
-| **Compliance audit failure** | LOW | MEDIUM | **LOW-MEDIUM** |
-| **Reputational damage from security incident** | LOW | HIGH | **MEDIUM** |
+| Risk                                           | Likelihood | Impact   | Severity        |
+|------------------------------------------------|------------|----------|-----------------|
+| **Pod compromise → full cluster access**       | MEDIUM     | CRITICAL | **HIGH**        |
+| **Dashboard vulnerability exploitation**       | LOW-MEDIUM | CRITICAL | **MEDIUM-HIGH** |
+| **Compliance audit failure**                   | LOW        | MEDIUM   | **LOW-MEDIUM**  |
+| **Reputational damage from security incident** | LOW        | HIGH     | **MEDIUM**      |
 
 **Overall Status Quo Risk: MEDIUM-HIGH** (unacceptable for production infrastructure)
 
@@ -974,12 +974,12 @@ microk8s kubectl auth can-i list secrets -n kube-system --as=system:serviceaccou
 
 ### Authorization Modes Explained
 
-| Mode | Description | Security Level |
-|------|-------------|----------------|
-| `AlwaysAllow` | All requests permitted, RBAC rules ignored | ❌ INSECURE |
-| `AlwaysAllow,RBAC` | RBAC rules exist but `AlwaysAllow` overrides denials | ❌ INSECURE (current) |
-| `Node,RBAC` | Node authorization for kubelets, RBAC for all other requests | ✓ SECURE (target) |
-| `RBAC,Node` | Same as above (order doesn't matter) | ✓ SECURE |
+| Mode               | Description                                                  | Security Level       |
+|--------------------|--------------------------------------------------------------|----------------------|
+| `AlwaysAllow`      | All requests permitted, RBAC rules ignored                   | ❌ INSECURE           |
+| `AlwaysAllow,RBAC` | RBAC rules exist but `AlwaysAllow` overrides denials         | ❌ INSECURE (current) |
+| `Node,RBAC`        | Node authorization for kubelets, RBAC for all other requests | ✓ SECURE (target)    |
+| `RBAC,Node`        | Same as above (order doesn't matter)                         | ✓ SECURE             |
 
 ### Common RBAC Resources
 
@@ -1053,54 +1053,54 @@ subjects:
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                     MICROK8S CLUSTER (4 nodes)                      │
-│                    Authorization Mode: Node,RBAC                     │
-│                                                                       │
-│  ┌─────────────────────┐  ┌─────────────────────┐                  │
-│  │  arc-systems (ns)   │  │  arc-owntube (ns)   │                  │
-│  │  ┌───────────────┐  │  │  ┌───────────────┐  │                  │
-│  │  │ ARC Controller│  │  │  │ Ephemeral     │  │                  │
-│  │  │ SA: arc-ctrl  │  │  │  │ Runner Pods   │  │                  │
-│  │  │ ClusterRole:  │  │  │  │ SA: arc-kube- │  │                  │
-│  │  │ - ARC CRDs    │  │  │  │     mode      │  │                  │
-│  │  │ - Pods (list) │  │  │  │ Role:         │  │                  │
-│  │  │ - SAs (list)  │  │  │  │ - Pods CRUD   │  │                  │
-│  │  └───────────────┘  │  │  │ - Jobs CRUD   │  │                  │
-│  │  ✓ Proper RBAC     │  │  │ - Secrets CRUD│  │                  │
-│  │  ✓ Continues work  │  │  │ - PVCs CRUD   │  │                  │
-│  └─────────────────────┘  │  └───────────────┘  │                  │
-│                            │  ✓ Proper RBAC     │                  │
-│                            │  ✓ Continues work  │                  │
-│                            └─────────────────────┘                  │
-│                                                                       │
-│  ┌─────────────────────┐  ┌─────────────────────┐                  │
-│  │  kube-system (ns)   │  │  minio (ns)         │                  │
-│  │  ┌───────────────┐  │  │  ┌───────────────┐  │                  │
-│  │  │ K8s Dashboard │  │  │  │ Ingress       │  │                  │
-│  │  │ SA: dashboard-│  │  │  │ (ExternalName)│  │                  │
-│  │  │     viewer    │  │  │  │ SA: default   │  │                  │
-│  │  │ ClusterRole:  │  │  │  │ (no perms)    │  │                  │
-│  │  │ - Pods (RO)   │  │  │  │               │  │                  │
+│                    Authorization Mode: Node,RBAC                    │
+│                                                                     │
+│  ┌─────────────────────┐  ┌─────────────────────┐                   │
+│  │  arc-systems (ns)   │  │  arc-owntube (ns)   │                   │
+│  │  ┌───────────────┐  │  │  ┌───────────────┐  │                   │
+│  │  │ ARC Controller│  │  │  │ Ephemeral     │  │                   │
+│  │  │ SA: arc-ctrl  │  │  │  │ Runner Pods   │  │                   │
+│  │  │ ClusterRole:  │  │  │  │ SA: arc-kube- │  │                   │
+│  │  │ - ARC CRDs    │  │  │  │     mode      │  │                   │
+│  │  │ - Pods (list) │  │  │  │ Role:         │  │                   │
+│  │  │ - SAs (list)  │  │  │  │ - Pods CRUD   │  │                   │
+│  │  └───────────────┘  │  │  │ - Jobs CRUD   │  │                   │
+│  │  ✓ Proper RBAC      │  │  │ - Secrets CRUD│  │                   │
+│  │  ✓ Continues work   │  │  │ - PVCs CRUD   │  │                   │
+│  └─────────────────────┘  │  └───────────────┘  │                   │
+│                           │  ✓ Proper RBAC      │                   │
+│                           │  ✓ Continues work   │                   │
+│                           └─────────────────────┘                   │
+│                                                                     │
+│  ┌─────────────────────┐  ┌──────────────────────┐                  │
+│  │  kube-system (ns)   │  │  minio (ns)          │                  │
+│  │  ┌───────────────┐  │  │  ┌────────────────┐  │                  │
+│  │  │ K8s Dashboard │  │  │  │ Ingress        │  │                  │
+│  │  │ SA: dashboard-│  │  │  │ (ExternalName) │  │                  │
+│  │  │     viewer    │  │  │  │ SA: default    │  │                  │
+│  │  │ ClusterRole:  │  │  │  │ (no perms)     │  │                  │
+│  │  │ - Pods (RO)   │  │  │  │                │  │                  │
 │  │  │ - Services(RO)│  │  │  │ ⚠️ Minimal API │  │                  │
 │  │  │ - Ingress (RO)│  │  │  │    access      │  │                  │
 │  │  │ 🔒 NO Secrets │  │  │  │    needed      │  │                  │
-│  │  └───────────────┘  │  │  └───────────────┘  │                  │
-│  │  ✓ NEW: Read-only  │  │  ✓ Zero perms OK   │                  │
-│  └─────────────────────┘  └─────────────────────┘                  │
-│                                                                       │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │  ADMIN USERS: ar9708, mblomdahl                              │   │
-│  │  Auth: X.509 cert (front-proxy-client)                       │   │
-│  │  ClusterRoleBinding: microk8s-admin → admin ClusterRole      │   │
-│  │  ✓ Full cluster admin access (appropriate for infra owners) │   │
-│  │  ✓ Root and physical access to servers                       │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-│                                                                       │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │  DEFAULT SERVICE ACCOUNTS (all namespaces)                   │   │
-│  │  Status: automountServiceAccountToken=false (best practice)  │   │
-│  │  Permissions: ZERO (secure default after RBAC enforcement)   │   │
-│  │  ✓ Cannot read, create, modify, or delete any resources      │   │
-│  └─────────────────────────────────────────────────────────────┘   │
+│  │  └───────────────┘  │  │  └────────────────┘  │                  │
+│  │  ✓ NEW: Read-only   │  │  ✓ Zero perms OK     │                  │
+│  └─────────────────────┘  └──────────────────────┘                  │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │  ADMIN USERS: ar9708, mblomdahl                             │    │
+│  │  Auth: X.509 cert (front-proxy-client)                      │    │
+│  │  ClusterRoleBinding: microk8s-admin → admin ClusterRole     │    │
+│  │  ✓ Full cluster admin access (appropriate for infra owners) │    │
+│  │  ✓ Root and physical access to servers                      │    │
+│  └─────────────────────────────────────────────────────────────┘    │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │  DEFAULT SERVICE ACCOUNTS (all namespaces)                  │    │
+│  │  Status: automountServiceAccountToken=false (best practice) │    │
+│  │  Permissions: ZERO (secure default after RBAC enforcement)  │    │
+│  │  ✓ Cannot read, create, modify, or delete any resources     │    │
+│  └─────────────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -1154,10 +1154,10 @@ subjects:
 
 **Document Control:**
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | 2025-11-11 | Infrastructure Analysis | Initial comprehensive analysis |
-| 2.0 | 2025-11-11 | Infrastructure Analysis | Revised for MicroK8s RBAC add-on focus; removed user access hardening concerns |
+| Version | Date       | Author                  | Changes                                                                        |
+|---------|------------|-------------------------|--------------------------------------------------------------------------------|
+| 1.0     | 2025-11-11 | Infrastructure Analysis | Initial comprehensive analysis                                                 |
+| 2.0     | 2025-11-11 | Infrastructure Analysis | Revised for MicroK8s RBAC add-on focus; removed user access hardening concerns |
 
 **Review Status:** DRAFT - Awaiting review by infrastructure team
 

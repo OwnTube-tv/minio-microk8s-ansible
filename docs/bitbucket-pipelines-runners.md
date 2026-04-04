@@ -189,8 +189,7 @@ pipelines:
 - **Why not a DaemonSet?** Each runner needs a unique `RUNNER_UUID` / OAuth secret.
   DaemonSets apply the same spec to every node.
 - **Why `nodeSelector` on labels, not hostnames?** Node labels survive hostname
-  changes (e.g. v1517a/b were renamed to a12c/d). The `bitbucket-runner` label
-  stays — no deployment changes needed.
+  changes. The `bitbucket-runner` label stays — no deployment changes needed.
 - **Why explicit `requests`?** Kubernetes defaults requests to limits if omitted.
   Without explicit small requests, each pod would reserve 8 CPUs.
 - **Scaling**: Each runner handles one build at a time. With 4 runners and

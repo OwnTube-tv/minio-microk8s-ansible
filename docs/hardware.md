@@ -84,8 +84,8 @@ Server Details for `minio3`
 
 Server setup:
 
-    Site: a12b (formerly v1517, relocated 2026-03-27)
-    Hostname: a12c.mabl.online (formerly v1517a)
+    Site: a12b
+    Hostname: a12c.mabl.online
     Model: ASUS PN52
     OS: Ubuntu 24.04
     CPU: AMD Ryzen 9 5900HX (16 threads)
@@ -104,8 +104,8 @@ Server Details for `minio4`
 
 Server setup:
 
-    Site: a12b (formerly v1517, relocated 2026-03-27)
-    Hostname: a12d.mabl.online (formerly v1517b)
+    Site: a12b
+    Hostname: a12d.mabl.online
     Model: ASUS PN53
     OS: Ubuntu 24.04
     CPU: AMD Ryzen 7 7735HS (16 threads)

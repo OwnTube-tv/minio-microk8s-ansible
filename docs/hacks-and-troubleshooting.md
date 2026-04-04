@@ -8,7 +8,7 @@ This page will be extended with funny quirks that needs to be addressed reproduc
 Realtek `r8125` Network Drivers for ASUS PN52/PN53 Hardware
 -----------------------------------------------------------
 
-The servers with hostnames `a12c.mabl.online` and `a12d.mabl.online` (formerly v1517a/v1517b) have 2.5 GbE NICs
+The servers with hostnames `a12c.mabl.online` and `a12d.mabl.online` have 2.5 GbE NICs
 that Ubuntu do not include good drivers for, after a number of days of uptime they stop working and the server
 need to be rebooted.
 

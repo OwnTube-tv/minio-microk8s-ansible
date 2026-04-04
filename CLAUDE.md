@@ -11,7 +11,7 @@ This Ansible project deploys and manages the S3 object storage infrastructure th
 - **OwnTube.tv** ([github.com/OwnTube-tv/web-client](https://github.com/OwnTube-tv/web-client)) is a portable video client for PeerTube (decentralized video hosting platform) built with React Native/Expo
 - **This repository** provides the S3 storage backend infrastructure for video content and static assets
 - **Infrastructure owner:** OwnTube Nordic AB (Swedish org. number: 559517-7196), Stockholm, Sweden
-- **Physical location:** 4 servers at two sub-sites in Sweden (a12a and a12b, formerly a12 and v1517)
+- **Physical location:** 4 servers at two sub-sites in Sweden (a12a and a12b)
 - **Total storage capacity:** 64 TB raw across 4 nodes (32 TB usable with MinIO distributed mode)
 
 ## Development Environment Setup
@@ -111,7 +111,7 @@ Four physical servers across two sub-sites on the same Bredband2 fiber, connecte
 - **minio1 (a12a.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.1.6, WiFi: 192.168.0.16
 - **minio2 (a12b.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.1.8, WiFi: 192.168.0.18
 
-**Site a12b** (192.168.3.0/24, formerly v1517, relocated 2026-03-27):
+**Site a12b** (192.168.3.0/24):
 - **minio3 (a12c.mabl.online):** AMD Ryzen 9, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.3.7, WiFi: 192.168.0.17
 - **minio4 (a12d.mabl.online):** AMD Ryzen 7, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.3.9, WiFi: 192.168.0.19
 
@@ -269,7 +269,7 @@ See `docs/github-actions-runners.md` for installation and verification steps.
 See `docs/hacks-and-troubleshooting.md` for details:
 
 **Realtek r8125 NIC drivers (a12c and a12d):**
-- Servers a12c/a12d (formerly at v1517 site) have 2.5 GbE NICs with problematic Ubuntu drivers
+- Servers a12c/a12d have 2.5 GbE NICs with problematic Ubuntu drivers
 - Custom systemd service `ar9708-r8125-hack.service` reinstalls Realtek drivers on each boot
 - Without this hack, NICs freeze after several days of uptime
 - Driver source: `/root/r8125-9.012.04/` (extracted from Realtek tarball)

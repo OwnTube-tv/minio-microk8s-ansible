@@ -105,7 +105,7 @@ The cluster demonstrates **hybrid RBAC implementation**:
 - 4-node MicroK8s HA cluster (minio1-4)
 - Kubernetes version: 1.30+ (recently upgraded from 1.29)
 - Total capacity: 64TB raw storage
-- Location: Sweden (sites a12a and a12b, formerly a12 and v1517)
+- Location: Sweden (sites a12a and a12b)
 
 **Workload Classification:**
 

@@ -17,7 +17,7 @@ galaxy_info:
         - 7
     - name: Ubuntu
       versions:
-        - 22.04
+        - 24.04
 
   galaxy_tags:
     - microk8s

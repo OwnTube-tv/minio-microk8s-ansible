@@ -108,12 +108,17 @@ microk8s helm list -A
 Four physical servers across two sub-sites on the same Bredband2 fiber, connected via IPsec VPN (IKEv2) between ER7206 routers (see `docs/hardware.md` for complete specs):
 
 **Site a12a** (192.168.1.0/24):
-- **minio1 (a12a.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA)
-- **minio2 (a12b.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA)
+- **minio1 (a12a.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.1.6, WiFi: 192.168.0.16
+- **minio2 (a12b.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.1.8, WiFi: 192.168.0.18
 
 **Site a12b** (192.168.3.0/24, formerly v1517, relocated 2026-03-27):
-- **minio3 (a12c.mabl.online):** AMD Ryzen 9, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA)
-- **minio4 (a12d.mabl.online):** AMD Ryzen 7, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA)
+- **minio3 (a12c.mabl.online):** AMD Ryzen 9, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.3.7, WiFi: 192.168.0.17
+- **minio4 (a12d.mabl.online):** AMD Ryzen 7, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.3.9, WiFi: 192.168.0.19
+
+**WiFi network** (192.168.0.0/24, SSID "A12-local"):
+- All 4 servers have built-in WiFi: a12a/a12b use Intel iwlwifi, a12c/a12d use MediaTek mt7921e
+- WiFi is a fallback path only (DHCP route metric 600 vs ethernet metric 100)
+- WiFi subnet included in the IPsec VPN tunnel, reachable from both 192.168.1.0/24 and 192.168.3.0/24
 
 Each server has two LVM Volume Groups:
 - `ubuntu-vg` (8TB): M.2 NVMe storage for OS and fast access

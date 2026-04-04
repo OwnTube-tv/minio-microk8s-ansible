@@ -1,7 +1,7 @@
 
 # `minio-microk8s-ansible` – MinIO S3 Object Storage with MicroK8s Load Balancing/Ingress
 
-Ansible playbook to configure our Ubuntu 22 servers to run a distributed MinIO S3 service. MicroK8s
+Ansible playbook to configure our Ubuntu 24.04 LTS servers to run a distributed MinIO S3 service. MicroK8s
 is used here as a sidecar to provide container platform capabilities, load balancing, and handle
 internet ingress.
 

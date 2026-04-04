@@ -49,7 +49,7 @@ Server setup:
     Site: a12a
     Hostname: a12a.mabl.online
     Model: ASUS NUC 13 Pro Tall
-    OS: Ubuntu 22.04
+    OS: Ubuntu 24.04
     CPU: Intel i5-1340P, 13th Gen (16 threads)
     Memory: 64 GB (DDR4 SDRAM)
     Hard drives:
@@ -57,7 +57,7 @@ Server setup:
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
       - 1 GbE LAN (Intel), address 192.168.1.6/24, public 83.233.237.206
-      - 802.11ax Wi-Fi, address 192.168.0.X/24
+      - 802.11ax Wi-Fi (Intel iwlwifi), address 192.168.0.16/24
 
 
 Server Details for `minio2`
@@ -68,7 +68,7 @@ Server setup:
     Site: a12a
     Hostname: a12b.mabl.online
     Model: ASUS NUC 13 Pro Tall
-    OS: Ubuntu 22.04
+    OS: Ubuntu 24.04
     CPU: Intel i5-1340P, 13th Gen (16 threads)
     Memory: 64 GB (DDR4 SDRAM)
     Hard drives:
@@ -76,7 +76,7 @@ Server setup:
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
       - 1 GbE LAN (Intel), address 192.168.1.8/24, public 83.233.237.208
-      - 802.11ax Wi-Fi, address 192.168.0.X/24
+      - 802.11ax Wi-Fi (Intel iwlwifi), address 192.168.0.18/24
 
 
 Server Details for `minio3`
@@ -87,7 +87,7 @@ Server setup:
     Site: a12b (formerly v1517, relocated 2026-03-27)
     Hostname: a12c.mabl.online (formerly v1517a)
     Model: ASUS PN52
-    OS: Ubuntu 22.04
+    OS: Ubuntu 24.04
     CPU: AMD Ryzen 9 5900HX (16 threads)
     Memory: 64 GB (DDR4 SDRAM)
     Hard drives:
@@ -96,7 +96,7 @@ Server setup:
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
       - 2.5 GbE LAN (Realtek r8125), address 192.168.3.7/24, public 83.233.237.207
-      - 802.11ax Wi-Fi, address 192.168.2.123
+      - 802.11ax Wi-Fi (MediaTek mt7921e), address 192.168.0.17/24
 
 
 Server Details for `minio4`
@@ -107,7 +107,7 @@ Server setup:
     Site: a12b (formerly v1517, relocated 2026-03-27)
     Hostname: a12d.mabl.online (formerly v1517b)
     Model: ASUS PN53
-    OS: Ubuntu 22.04
+    OS: Ubuntu 24.04
     CPU: AMD Ryzen 7 7735HS (16 threads)
     Memory: 64 GB (DDR5 SDRAM)
     Hard drives:
@@ -116,5 +116,5 @@ Server setup:
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
       - 2.5 GbE LAN (Realtek r8125), address 192.168.3.9/24, public 83.233.237.209
-      - 802.11ax Wi-Fi, address 192.168.2.124
+      - 802.11ax Wi-Fi (MediaTek mt7921e), address 192.168.0.19/24
 

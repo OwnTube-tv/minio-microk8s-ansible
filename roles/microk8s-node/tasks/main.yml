@@ -13,6 +13,9 @@
   register: microk8s_status
   until: microk8s_status.stdout.find('is running') != -1
   changed_when: no
+  # Run the read-only status check for real in check mode too — a skipped
+  # shell task leaves stdout empty and the until-condition can never pass
+  check_mode: no
   tags: microk8s-node
 
 - name: Create kubectl Snap alias

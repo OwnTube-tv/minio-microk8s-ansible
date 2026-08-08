@@ -311,7 +311,6 @@ OwnTube enables "many branded apps with few users each" rather than "one app wit
 
 - **`docs/hardware.md`:** Complete hardware specifications for all 4 MinIO servers
 - **`docs/github-actions-runners.md`:** Self-hosted GitHub Actions runner installation and verification
-- **`docs/bitbucket-pipelines-runners.md`:** Bitbucket Pipelines self-hosted runner setup for Xyz Inc.
 - **`docs/hacks-and-troubleshooting.md`:** Hardware quirks and reproducible workarounds
 - **`README.md`:** Getting started guide, deployment walkthrough, Auth0 OIDC setup
 

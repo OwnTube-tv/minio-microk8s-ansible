@@ -105,6 +105,7 @@
       - make
       - gcc
       - xsel
+      - smartmontools
     autoremove: true
     state: present
   tags: common

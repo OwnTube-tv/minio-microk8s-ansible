@@ -66,7 +66,7 @@ jobs:
           echo "curl: $(curl --version | head -1)"
 
       - name: Test checkout action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Verify repository checkout
         run: |

@@ -101,6 +101,7 @@
   ansible.builtin.apt:
     name:
       - acl
+      - htop
       - tree
       - dlocate
       - jq
@@ -118,6 +119,7 @@
       - gcc
       - xsel
       - smartmontools
+      - ubuntu-server
     autoremove: true
     state: present
   tags: common

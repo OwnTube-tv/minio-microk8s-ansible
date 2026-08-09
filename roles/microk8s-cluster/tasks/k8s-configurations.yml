@@ -18,6 +18,7 @@
   kubernetes.core.k8s:
     definition: "{{ lookup('file', 'letsencrypt-cluster-issuer.yml') | from_yaml }}"
     state: present
+  when: create_letsencrypt_issuer
   tags: microk8s-cluster
 
 - name: Add 'host.local' to CoreDNS ConfigMap for MicroK8s 'host-access' add-on compatibility
@@ -30,12 +31,14 @@
   kubernetes.core.k8s:
     definition: "{{ lookup('file', 'k8s-dashboard-ingress.yml') | from_yaml }}"
     state: present
+  when: create_dashboard_ingress
   tags: microk8s-cluster
 
 - name: Create long-lived token secret for Kubernetes Dashboard (K8s 1.24+)
   kubernetes.core.k8s:
     definition: "{{ lookup('file', 'k8s-dashboard-token.yml') | from_yaml }}"
     state: present
+  when: create_dashboard_ingress
   tags: microk8s-cluster
 
 ...

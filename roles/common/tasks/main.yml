@@ -101,6 +101,7 @@
   ansible.builtin.apt:
     name:
       - acl
+      - btop
       - htop
       - tree
       - dlocate
@@ -110,6 +111,7 @@
       - unzip
       - wget
       - net-tools
+      - nethogs
       - parallel
       - inetutils-traceroute
       - python3-venv

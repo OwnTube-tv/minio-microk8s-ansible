@@ -47,7 +47,9 @@
       {{ hostvars[inventory_hostname].ansible_default_ipv4.address }} via SSH and run
       'microk8s add-node' for each of the other nodes per the https://microk8s.io/docs/clustering
       documentation.
-  when: inventory_hostname == designated_host
+  when:
+    - groups[microk8s_servers_group] | length > 1
+    - inventory_hostname == designated_host
   tags: microk8s-node
 
 - name: Print message about joining the other MicroK8s nodes to the designated/first node

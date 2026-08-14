@@ -17,4 +17,8 @@ microk8s_plugins:
   metrics-server: yes
   host-access: yes
 
+create_letsencrypt_issuer: yes
+
+create_dashboard_ingress: yes
+
 ...

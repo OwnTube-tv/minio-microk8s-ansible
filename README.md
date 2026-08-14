@@ -12,7 +12,7 @@ Clone the repo:
     git clone git@github.com:OwnTube-tv/minio-microk8s-ansible.git
     cd minio-microk8s-ansible/
 
-Create a virtual environment and install the dependencies:
+Create a virtual environment (Python 3.12 or newer) and install the dependencies:
 
     python3 -m venv venv
     source venv/bin/activate
@@ -38,7 +38,7 @@ Run through the bootstrap playbook in `--check` mode to verify that provisioning
 
 The initial setup steps for a live deployment are as follows:
 
-1. Run the `0-bootstrap.yml` playbook to prepare the server baseline for MinIO and MicroK8s setup:
+1. Run the `0-bootstrap.yml` playbook to prepare the server baseline and install MicroK8s:
 
     ```shell
     ansible-playbook 0-bootstrap.yml

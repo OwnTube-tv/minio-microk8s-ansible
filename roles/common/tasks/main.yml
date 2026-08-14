@@ -85,10 +85,24 @@
     name: Europe/Stockholm
   tags: common
 
+- name: Generate the en_US.UTF-8 locale
+  community.general.locale_gen:
+    name: en_US.UTF-8
+    state: present
+  tags: common
+
+- name: Set en_US.UTF-8 as default system locale
+  ansible.builtin.copy:
+    content: "LANG=en_US.UTF-8\n"
+    dest: /etc/default/locale
+  tags: common
+
 - name: Install base packages
   ansible.builtin.apt:
     name:
       - acl
+      - btop
+      - htop
       - tree
       - dlocate
       - jq
@@ -97,6 +111,7 @@
       - unzip
       - wget
       - net-tools
+      - nethogs
       - parallel
       - inetutils-traceroute
       - python3-venv
@@ -106,6 +121,7 @@
       - gcc
       - xsel
       - smartmontools
+      - ubuntu-server
     autoremove: true
     state: present
   tags: common

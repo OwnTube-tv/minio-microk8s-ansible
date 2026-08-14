@@ -3,6 +3,8 @@
 - name: Check if the 'minio_vg_device' is a block device
   ansible.builtin.stat:
     path: "{{ minio_vg_device }}"
+    # Follow symlinks — /dev/disk/by-id/* paths are links to the real device
+    follow: yes
   register: minio_vg_device_stat
   tags: minio-disks
 

@@ -16,7 +16,7 @@ This Ansible project deploys and manages the S3 object storage infrastructure th
 
 ## Development Environment Setup
 
-1. Create Python virtual environment and install dependencies:
+1. Create Python virtual environment (Python 3.12 or newer) and install dependencies:
    ```bash
    python3 -m venv venv
    source venv/bin/activate
@@ -184,20 +184,24 @@ See README.md section "Add OpenID Connect using Auth0" for complete setup instru
 - Configures sysadmin accounts and Ansible service account
 - Enforces strict SSH security (no root login, AllowUsers whitelist, no password auth for sudo)
 - Removes ~/.ssh/authorized_keys for root user
-- Sets Europe/Stockholm timezone
-- Installs essential packages
+- Sets Europe/Stockholm timezone and enforces the en_US.UTF-8 system locale
+- Installs essential packages (incl. htop and the ubuntu-server metapackage, so the baseline
+  does not depend on the OS installer's package selection)
 - Removes firewalld (conflicts with Calico)
 
 **`microk8s-node`** - MicroK8s installation
 - Installs MicroK8s via snap (stable channel)
 - Creates kubectl snap alias
 - Adds users to microk8s group
-- Prints clustering instructions (manual execution required)
+- Prints clustering instructions when the inventory group holds more than one host (manual
+  execution required); a one-host group collapses cleanly to a single-node setup
 
 **`microk8s-cluster`** - Kubernetes configuration
 - Enables add-ons on designated master first, then other nodes
 - Configures user kubectl access
 - Deploys cert-manager, dashboard ingress, CoreDNS settings
+- Site resources are gated by the `create_letsencrypt_issuer` and `create_dashboard_ingress`
+  task toggles (both default to enabled here; disabled in frigate-microk8s-ansible)
 - Task files: `user-configurations.yml`, `k8s-configurations.yml`
 
 **`minio-server`** - MinIO S3 service

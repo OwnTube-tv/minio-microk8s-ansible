@@ -18,6 +18,18 @@
   check_mode: no
   tags: microk8s-node
 
+- name: Pin the API server advertise address to the node's primary interface
+  # Not maintained by MicroK8s itself: the value is written once and never
+  # tracks later address changes. A stale entry leaves the 'kubernetes'
+  # Service endpoints pointing at dead IPs, which breaks the CNI and takes
+  # the pod network down with it.
+  ansible.builtin.lineinfile:
+    path: /var/snap/microk8s/current/args/kube-apiserver
+    regexp: '^--advertise-address='
+    line: '--advertise-address={{ ansible_default_ipv4.address }}'
+  notify: Restart MicroK8s kubelite
+  tags: microk8s-node
+
 - name: Create kubectl Snap alias
   community.general.snap_alias:
     name: microk8s.kubectl
@@ -58,7 +70,12 @@
       Login to the MicroK8s node {{ hostvars[inventory_hostname].ansible_default_ipv4.address }} via
       SSH and cluster it with the first host with 'microk8s join
       {{ hostvars[designated_host].ansible_default_ipv4.address }}:25000/<token>'.
-  when: inventory_hostname != designated_host
+  when:
+    - inventory_hostname != designated_host
+    # Skip rather than fail when the designated host is outside the current
+    # run, e.g. under --limit; its facts have not been gathered then, and a
+    # failed host would also keep handlers from running.
+    - hostvars[designated_host].ansible_default_ipv4 is defined
   tags: microk8s-node
 
 ...

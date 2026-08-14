@@ -2,6 +2,10 @@
 
 - hosts: minio_microk8s_servers
   become: yes
+  # One host at a time: the microk8s-node role can restart kubelite, and
+  # restarting the control plane on every node at once would cost dqlite
+  # its quorum.
+  serial: 1
   roles:
     - common
     - role: microk8s-node

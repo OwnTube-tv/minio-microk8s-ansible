@@ -1,0 +1,11 @@
+---
+
+# Deliberately without 'check_mode: no' — a --check run must not restart the
+# control plane. The playbook runs 'serial: 1', so this becomes a rolling
+# restart and the cluster keeps dqlite quorum throughout.
+- name: Restart MicroK8s kubelite
+  ansible.builtin.systemd:
+    name: snap.microk8s.daemon-kubelite
+    state: restarted
+
+...

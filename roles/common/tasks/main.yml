@@ -121,6 +121,7 @@
       - gcc
       - xsel
       - smartmontools
+      - lm-sensors
       - ubuntu-server
     autoremove: true
     state: present

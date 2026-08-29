@@ -186,7 +186,8 @@ See README.md section "Add OpenID Connect using Auth0" for complete setup instru
 - Removes ~/.ssh/authorized_keys for root user
 - Sets Europe/Stockholm timezone and enforces the en_US.UTF-8 system locale
 - Installs essential packages (incl. htop and the ubuntu-server metapackage, so the baseline
-  does not depend on the OS installer's package selection)
+  does not depend on the OS installer's package selection, plus smartmontools and lm-sensors —
+  see [docs/hardware.md](docs/hardware.md) for what each one reads)
 - Removes firewalld (conflicts with Calico)
 
 **`microk8s-node`** - MicroK8s installation
@@ -313,7 +314,7 @@ OwnTube enables "many branded apps with few users each" rather than "one app wit
 
 ## Additional Documentation
 
-- **`docs/hardware.md`:** Complete hardware specifications for all 4 MinIO servers
+- **`docs/hardware.md`:** Complete hardware specifications and thermal sensor inventory for all 4 MinIO servers
 - **`docs/github-actions-runners.md`:** Self-hosted GitHub Actions runner installation and verification
 - **`docs/hacks-and-troubleshooting.md`:** Hardware quirks and reproducible workarounds
 - **`README.md`:** Getting started guide, deployment walkthrough, Auth0 OIDC setup

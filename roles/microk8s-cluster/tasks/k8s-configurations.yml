@@ -5,6 +5,10 @@
     path: /root/.kube
     state: directory
     mode: 0750
+  # Every kubernetes.core.k8s task below reads this kubeconfig, in check mode
+  # too. Skipping these two would leave whatever the file happened to contain
+  # from an earlier run — a stale API server address then fails the check.
+  check_mode: no
   tags: microk8s-cluster
 
 - name: Create root kubectl config for the MicroK8s designated host
@@ -12,6 +16,7 @@
   args:
     executable: /bin/bash
   changed_when: no
+  check_mode: no
   tags: microk8s-cluster
 
 - name: Create Let's Encrypt issuer for cert-manager

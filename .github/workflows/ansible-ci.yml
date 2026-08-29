@@ -15,10 +15,10 @@ jobs:
           playbook: 0-bootstrap.yml
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: |
-            [83.233.237.206]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnXbhMpfFhusPWbl0OhXDjO9m0XT51FWF7PowVNOVg/
+            [83.233.237.207]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnXbhMpfFhusPWbl0OhXDjO9m0XT51FWF7PowVNOVg/
             [83.233.237.208]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSP+L5mjXBT5UqCi9/rHWFAeMCqhGyxYVbSQfmDkNuB
-            [83.233.237.207]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
-            [83.233.237.209]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
+            [83.233.237.209]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
+            [83.233.237.210]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
           vault_password: ${{ secrets.VAULT_PASSWORD }}
           options: |
             --diff
@@ -30,10 +30,10 @@ jobs:
           playbook: 1-microk8s-cluster.yml
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: |
-            [83.233.237.206]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnXbhMpfFhusPWbl0OhXDjO9m0XT51FWF7PowVNOVg/
+            [83.233.237.207]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnXbhMpfFhusPWbl0OhXDjO9m0XT51FWF7PowVNOVg/
             [83.233.237.208]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSP+L5mjXBT5UqCi9/rHWFAeMCqhGyxYVbSQfmDkNuB
-            [83.233.237.207]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
-            [83.233.237.209]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
+            [83.233.237.209]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
+            [83.233.237.210]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
           vault_password: ${{ secrets.VAULT_PASSWORD }}
           options: |
             --diff
@@ -45,10 +45,10 @@ jobs:
           playbook: 2-minio-servers.yml
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: |
-            [83.233.237.206]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnXbhMpfFhusPWbl0OhXDjO9m0XT51FWF7PowVNOVg/
+            [83.233.237.207]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnXbhMpfFhusPWbl0OhXDjO9m0XT51FWF7PowVNOVg/
             [83.233.237.208]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSP+L5mjXBT5UqCi9/rHWFAeMCqhGyxYVbSQfmDkNuB
-            [83.233.237.207]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
-            [83.233.237.209]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
+            [83.233.237.209]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
+            [83.233.237.210]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
           vault_password: ${{ secrets.VAULT_PASSWORD }}
           options: |
             --diff
@@ -61,10 +61,10 @@ jobs:
           playbook: 3-minio-oidc.yml
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: |
-            [83.233.237.206]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnXbhMpfFhusPWbl0OhXDjO9m0XT51FWF7PowVNOVg/
+            [83.233.237.207]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnXbhMpfFhusPWbl0OhXDjO9m0XT51FWF7PowVNOVg/
             [83.233.237.208]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSP+L5mjXBT5UqCi9/rHWFAeMCqhGyxYVbSQfmDkNuB
-            [83.233.237.207]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
-            [83.233.237.209]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
+            [83.233.237.209]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICK+q9cT0xsLeMQT/XI7DpTYB8+XX21h1vOWk+9/JyFx
+            [83.233.237.210]:622 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5bwRDW4XzjrPytPvrRb/YFVrNZdXbgwg6+uOJG+Hji
           vault_password: ${{ secrets.VAULT_PASSWORD }}
           options: |
             --diff

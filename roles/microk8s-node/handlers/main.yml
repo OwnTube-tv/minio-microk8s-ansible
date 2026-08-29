@@ -1,0 +1,16 @@
+---
+
+# 'throttle: 1' restarts one node at a time even though the play itself runs
+# on all of them in parallel: the Kubernetes control plane stores its state in
+# dqlite, which needs a majority of nodes available, so restarting every node
+# at once would cost the cluster its quorum.
+#
+# Deliberately without 'check_mode: no' — a --check run must not restart the
+# control plane.
+- name: Restart MicroK8s kubelite
+  ansible.builtin.systemd:
+    name: snap.microk8s.daemon-kubelite
+    state: restarted
+  throttle: 1
+
+...

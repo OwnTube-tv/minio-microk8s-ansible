@@ -11,7 +11,7 @@ This Ansible project deploys and manages the S3 object storage infrastructure th
 - **OwnTube.tv** ([github.com/OwnTube-tv/web-client](https://github.com/OwnTube-tv/web-client)) is a portable video client for PeerTube (decentralized video hosting platform) built with React Native/Expo
 - **This repository** provides the S3 storage backend infrastructure for video content and static assets
 - **Infrastructure owner:** OwnTube Nordic AB (Swedish org. number: 559517-7196), Stockholm, Sweden
-- **Physical location:** 4 servers at two sub-sites in Sweden (a12a and a12b)
+- **Physical location:** 4 servers in one rack at site `a12-s3` in Stockholm, Sweden
 - **Total storage capacity:** 64 TB raw across 4 nodes (32 TB usable with MinIO distributed mode)
 
 ## Development Environment Setup
@@ -105,20 +105,19 @@ microk8s helm list -A
 
 ### Physical Infrastructure
 
-Four physical servers across two sub-sites on the same Bredband2 fiber, connected via IPsec VPN (IKEv2) between ER7206 routers (see `docs/hardware.md` for complete specs):
+Four physical servers in one rack on a single subnet behind the `a12-s3` gateway, on a shared Bredband2 fiber (see `docs/hardware.md` for complete specs). Until the consolidation on 2026-08-14 they were split across two sub-sites joined by an IPsec tunnel; that split is gone and no tunnel sits in the cluster's path any more.
 
-**Site a12a** (192.168.1.0/24):
-- **minio1 (a12a.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.1.6, WiFi: 192.168.0.16
-- **minio2 (a12b.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.1.8, WiFi: 192.168.0.18
+**Subnet 192.168.3.0/24** (gateway 192.168.3.1) — each LAN address mirrors the last octet of its public one:
+- **minio1 (a12a.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.3.207, public: 83.233.237.207
+- **minio2 (a12b.mabl.online):** Intel i5-1340P, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.3.208, public: 83.233.237.208
+- **minio3 (a12c.mabl.online):** AMD Ryzen 9, 64GB RAM, 16TB SSD (2x4TB M.2 + 8TB SATA) — LAN: 192.168.3.209, public: 83.233.237.209
+- **minio4 (a12d.mabl.online):** AMD Ryzen 7, 64GB RAM, 16TB SSD (2x4TB M.2 + 8TB SATA) — LAN: 192.168.3.210, public: 83.233.237.210
 
-**Site a12b** (192.168.3.0/24):
-- **minio3 (a12c.mabl.online):** AMD Ryzen 9, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.3.7, WiFi: 192.168.0.17
-- **minio4 (a12d.mabl.online):** AMD Ryzen 7, 64GB RAM, 16TB SSD (8TB M.2 + 8TB SATA) — LAN: 192.168.3.9, WiFi: 192.168.0.19
+All four have 2.5 GbE NICs (Intel `igc` on a12a/a12b, Realtek `r8125` on a12c/a12d) and all four currently negotiate 1 Gb/s.
 
-**WiFi network** (192.168.0.0/24, SSID "A12-local"):
+**WiFi — present but disabled:**
 - All 4 servers have built-in WiFi: a12a/a12b use Intel iwlwifi, a12c/a12d use MediaTek mt7921e
-- WiFi is a fallback path only (DHCP route metric 600 vs ethernet metric 100)
-- WiFi subnet included in the IPsec VPN tunnel, reachable from both 192.168.1.0/24 and 192.168.3.0/24
+- Disabled since 2026-08-14: the netplan config is parked as `00-installer-config-wifi.yaml.disabled` on every node and all four radios are down. WiFi is not an available fallback path, despite the adapters being present. `docs/hacks-and-troubleshooting.md` covers why (kubelet picked the WiFi address as a node InternalIP) and how to reverse it.
 
 Each server has two LVM Volume Groups:
 - `ubuntu-vg` (8TB): M.2 NVMe storage for OS and fast access
@@ -267,7 +266,7 @@ See `docs/github-actions-runners.md` for installation and verification steps.
 - **DNS records:** Assumes external DNS configured for `*.owntube.tv` pointing to cluster ingress
 - **Cluster recovery:** After network changes or server relocation, stale kube-proxy iptables may cause cascading pod failures. Reliable fix: rolling `microk8s stop && microk8s start` on all nodes
 - **UPS protection:** Dual-UPS chain (EcoFlow RIVER 3 Plus Max 858Wh + APC BX750MI-GR) powers all servers and networking. ~140W load, ~5.5h runtime on battery. A UPS failure previously caused a major cluster outage.
-- **Public IP NAT:** 1:1 NAT configured for .206 (a12a), .208 (a12b), .207 (a12c), .209 (a12d). IP .210 is available but not yet allocated.
+- **Public IP NAT:** 1:1 NAT for .207 (a12a), .208 (a12b), .209 (a12c), .210 (a12d), each mirroring the host's last LAN octet. `.206` belongs to the `a12-s1` site, which remains active for the office and client network but hosts no MinIO servers.
 
 ### Known Hardware Quirks
 

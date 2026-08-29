@@ -478,7 +478,7 @@ The RBAC add-on reduces complexity from MEDIUM (manual configuration) to **LOW-M
 
 ```bash
 # SSH to designated master node
-ssh -p 622 owntube_ansible@83.233.237.206
+ssh -p 622 owntube_ansible@83.233.237.207
 
 # List all pods and their service accounts
 sudo microk8s kubectl get pods --all-namespaces \
@@ -630,7 +630,7 @@ ansible-playbook 1-microk8s-cluster.yml --tags rbac-hardening
 
 ```bash
 # SSH to designated master
-ssh -p 622 owntube_ansible@83.233.237.206
+ssh -p 622 owntube_ansible@83.233.237.207
 
 # Backup all RBAC resources
 sudo microk8s kubectl get roles,rolebindings,clusterroles,clusterrolebindings --all-namespaces -o yaml > /tmp/rbac-backup-$(date +%Y%m%d-%H%M%S).yaml
@@ -640,15 +640,15 @@ sudo cp /var/snap/microk8s/current/args/kube-apiserver /tmp/kube-apiserver.backu
 
 # Copy backups to local machine
 exit
-scp -P 622 owntube_ansible@83.233.237.206:/tmp/rbac-backup-*.yaml ~/Downloads/
-scp -P 622 owntube_ansible@83.233.237.206:/tmp/kube-apiserver.backup ~/Downloads/
+scp -P 622 owntube_ansible@83.233.237.207:/tmp/rbac-backup-*.yaml ~/Downloads/
+scp -P 622 owntube_ansible@83.233.237.207:/tmp/kube-apiserver.backup ~/Downloads/
 ```
 
 #### **Step 5: Enable RBAC Enforcement**
 
 ```bash
 # SSH to designated master node (alphabetically first)
-ssh -p 622 owntube_ansible@83.233.237.206
+ssh -p 622 owntube_ansible@83.233.237.207
 
 # Enable RBAC using MicroK8s add-on
 sudo microk8s enable rbac
@@ -712,7 +712,7 @@ sudo microk8s kubectl describe certificate -n kube-system kubernetes-dashboard-i
 
 ```bash
 # Run kube-bench on one node
-ssh -p 622 owntube_ansible@83.233.237.206
+ssh -p 622 owntube_ansible@83.233.237.207
 
 docker run --rm --pid=host \
   -v /var/snap/microk8s/current:/var/snap/microk8s/current:ro \
@@ -727,7 +727,7 @@ grep -A 10 "5.1" /tmp/cis-compliance-post-rbac.txt
 
 # Expected: PASS for 5.1.5 and 5.1.6
 exit
-scp -P 622 owntube_ansible@83.233.237.206:/tmp/cis-compliance-post-rbac.txt ~/Downloads/
+scp -P 622 owntube_ansible@83.233.237.207:/tmp/cis-compliance-post-rbac.txt ~/Downloads/
 ```
 
 ### 7.2 Rollback Procedure
@@ -738,7 +738,7 @@ scp -P 622 owntube_ansible@83.233.237.206:/tmp/cis-compliance-post-rbac.txt ~/Do
 
 ```bash
 # SSH to designated master
-ssh -p 622 owntube_ansible@83.233.237.206
+ssh -p 622 owntube_ansible@83.233.237.207
 
 # Manually edit kube-apiserver args
 sudo vi /var/snap/microk8s/current/args/kube-apiserver
@@ -771,7 +771,7 @@ sudo microk8s kubectl get nodes
 
 ```bash
 # SSH to designated master
-ssh -p 622 owntube_ansible@83.233.237.206
+ssh -p 622 owntube_ansible@83.233.237.207
 
 # Disable RBAC (DESTROYS all RBAC resources ⚠️)
 sudo microk8s disable rbac
@@ -798,9 +798,9 @@ sudo microk8s disable rbac
 
 ```bash
 # If RBAC resources were accidentally deleted
-scp -P 622 ~/Downloads/rbac-backup-*.yaml owntube_ansible@83.233.237.206:/tmp/
+scp -P 622 ~/Downloads/rbac-backup-*.yaml owntube_ansible@83.233.237.207:/tmp/
 
-ssh -p 622 owntube_ansible@83.233.237.206
+ssh -p 622 owntube_ansible@83.233.237.207
 sudo microk8s kubectl apply -f /tmp/rbac-backup-*.yaml
 
 # Verify critical workloads

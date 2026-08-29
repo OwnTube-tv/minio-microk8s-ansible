@@ -10,12 +10,23 @@ a 8 TB "`minio-vg`" with SATA storage. See additional details below.
 Site Overview
 -------------
 
-All 4 servers are co-located in a server rack across two sub-sites sharing the same
-Bredband2 fiber connection and UPS power chain.
+All 4 servers are co-located in one server rack on a single subnet behind the `a12-s3` gateway,
+sharing the same Bredband2 fiber connection and UPS power chain. Until the consolidation on
+2026-08-14 they were split across two sub-sites on separate subnets joined by an IPsec tunnel;
+that split is gone and no tunnel sits in the cluster's path any more.
 
-- **Site a12a** (192.168.1.0/24, VLAN 2): minio1 (a12a), minio2 (a12b) — ASUS NUC 13 Pro Tall
-- **Site a12b** (192.168.3.0/24): minio3 (a12c), minio4 (a12d) — ASUS PN52/PN53
-- Inter-site connectivity: IPsec VPN (IKEv2) between ER7206 routers (.206 ↔ .207)
+- **Subnet:** 192.168.3.0/24, gateway 192.168.3.1
+- **Addressing:** the last octet of each LAN address mirrors its public one — a12a `.207`,
+  a12b `.208`, a12c `.209`, a12d `.210`
+- **Public IPs:** 1:1 NAT for 83.233.237.207-.210. `83.233.237.206` stays with the `a12-s1` site,
+  which remains active for the office and client network but hosts no MinIO servers.
+- **Hardware:** minio1 (a12a), minio2 (a12b) — ASUS NUC 13 Pro Tall; minio3 (a12c),
+  minio4 (a12d) — ASUS PN52/PN53
+- **Link speed:** all four have 2.5 GbE NICs and all four currently negotiate 1 Gb/s
+- **WiFi:** built-in on every node, but deliberately disabled since 2026-08-14 — the netplan
+  config sits as `00-installer-config-wifi.yaml.disabled` and every radio is down. It is not an
+  available fallback path despite the adapters being present. See
+  [hacks-and-troubleshooting.md](hacks-and-troubleshooting.md) for why and how to reverse it.
 
 
 Power Supply
@@ -46,7 +57,7 @@ Server Details for `minio1`
 
 Server setup:
 
-    Site: a12a
+    Site: a12-s3
     Hostname: a12a.mabl.online
     Model: ASUS NUC 13 Pro Tall
     OS: Ubuntu 24.04
@@ -56,8 +67,9 @@ Server setup:
       - 8 TB SSD (Corsair MP600 PRO M.2)
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
-      - 1 GbE LAN (Intel), address 192.168.1.6/24, public 83.233.237.206
-      - 802.11ax Wi-Fi (Intel iwlwifi), address 192.168.0.16/24
+      - 2.5 GbE LAN (Intel igc), interface enp86s0, address 192.168.3.207/24,
+        public 83.233.237.207, currently linked at 1 Gb/s
+      - 802.11ax Wi-Fi (Intel iwlwifi), interface wlo1 — disabled, radio down
 
 
 Server Details for `minio2`
@@ -65,7 +77,7 @@ Server Details for `minio2`
 
 Server setup:
 
-    Site: a12a
+    Site: a12-s3
     Hostname: a12b.mabl.online
     Model: ASUS NUC 13 Pro Tall
     OS: Ubuntu 24.04
@@ -75,8 +87,9 @@ Server setup:
       - 8 TB SSD (Corsair MP600 PRO M.2)
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
-      - 1 GbE LAN (Intel), address 192.168.1.8/24, public 83.233.237.208
-      - 802.11ax Wi-Fi (Intel iwlwifi), address 192.168.0.18/24
+      - 2.5 GbE LAN (Intel igc), interface enp86s0, address 192.168.3.208/24,
+        public 83.233.237.208, currently linked at 1 Gb/s
+      - 802.11ax Wi-Fi (Intel iwlwifi), interface wlo1 — disabled, radio down
 
 
 Server Details for `minio3`
@@ -84,7 +97,7 @@ Server Details for `minio3`
 
 Server setup:
 
-    Site: a12b
+    Site: a12-s3
     Hostname: a12c.mabl.online
     Model: ASUS PN52
     OS: Ubuntu 24.04
@@ -95,8 +108,9 @@ Server setup:
       - 4 TB SSD (Kingston NV2 M.2)
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
-      - 2.5 GbE LAN (Realtek r8125), address 192.168.3.7/24, public 83.233.237.207
-      - 802.11ax Wi-Fi (MediaTek mt7921e), address 192.168.0.17/24
+      - 2.5 GbE LAN (Realtek r8125), interface enp2s0, address 192.168.3.209/24,
+        public 83.233.237.209, currently linked at 1 Gb/s
+      - 802.11ax Wi-Fi (MediaTek mt7921e), interface wlp3s0 — disabled, radio down
 
 
 Server Details for `minio4`
@@ -104,7 +118,7 @@ Server Details for `minio4`
 
 Server setup:
 
-    Site: a12b
+    Site: a12-s3
     Hostname: a12d.mabl.online
     Model: ASUS PN53
     OS: Ubuntu 24.04
@@ -115,8 +129,9 @@ Server setup:
       - 4 TB SSD (Kingston NV2 M.2)
       - 8 TB SSD (Samsung 870 QVO SATA)
     Network:
-      - 2.5 GbE LAN (Realtek r8125), address 192.168.3.9/24, public 83.233.237.209
-      - 802.11ax Wi-Fi (MediaTek mt7921e), address 192.168.0.19/24
+      - 2.5 GbE LAN (Realtek r8125), interface enp3s0, address 192.168.3.210/24,
+        public 83.233.237.210, currently linked at 1 Gb/s
+      - 802.11ax Wi-Fi (MediaTek mt7921e), interface wlp4s0 — disabled, radio down
 
 
 
@@ -176,3 +191,28 @@ appends the bus and address to each chip name, which is what tells the pair apar
 hwmon directories in all, two of them USB-C power supplies and two ASUS WMI platform devices.
 
 None of this polls or alerts. It makes the numbers readable on demand, not noticed on their own.
+
+`sensors` also pairs each chip with its own high and critical thresholds, which the raw hwmon walk
+does not do for you. That turned out to be the more useful half. Read on 2026-08-29 with the
+cluster idle:
+
+    Disk                       Composite now   high / crit   Fitted in
+    Corsair MP600 PRO NH       42.9-53.9 °C    83.8 / 88.8   a12a, a12b, a12c
+    Kingston NV2 SNV2S4000G    48.9-56.9 °C    76.8 / 78.8   a12c, a12d (two)
+
+The Kingston drives carry a critical limit ten degrees below the Corsair ones, and a12d's pair are
+the warmest in the cluster. `Composite` is the sensor those thresholds apply to and it has better
+than 20 °C of headroom everywhere, so nothing is close to a limit at idle — but a12d is the node to
+re-read under load rather than assume. Its `Sensor 2`, the reading the login banner picks up at
+71.8 °C, publishes no thresholds at all: both `high` and `low` come back as +0.0 °C, so that number
+cannot be judged against anything the drive tells us.
+
+CPU limits are uniform and generous by comparison. `coretemp` reports high and crit both at
+100.0 °C on the Intel nodes, and `k10temp` publishes neither on the AMD ones.
+
+A cosmetic wart worth knowing about: on a12c and a12d every `sensors` run writes two lines to
+stderr, because the Kingston firmware does not answer for its third sensor's min/max. The readings
+themselves are unaffected.
+
+    ERROR: Can't get value of subfeature temp3_min: I/O error
+    ERROR: Can't get value of subfeature temp3_max: I/O error

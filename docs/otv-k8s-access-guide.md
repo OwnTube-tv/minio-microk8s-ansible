@@ -12,10 +12,10 @@ Your local `kubectl` and `k9s` are now configured to access your MicroK8s cluste
 
 ```bash
 # Start tunnel in background
-ssh -f -N -L 16443:192.168.1.6:16443 -p 622 owntube_ansible@83.233.237.206
+ssh -f -N -L 16443:192.168.3.207:16443 -p 622 owntube_ansible@83.233.237.207
 
 # Or in foreground (Ctrl+C to stop)
-ssh -N -L 16443:192.168.1.6:16443 -p 622 owntube_ansible@83.233.237.206
+ssh -N -L 16443:192.168.3.207:16443 -p 622 owntube_ansible@83.233.237.207
 ```
 
 ### 2. Switch to the cluster context
@@ -63,7 +63,7 @@ pkill -f "ssh.*16443"
 pkill -f "ssh.*16443"
 
 # Start new one
-ssh -f -N -L 16443:192.168.1.6:16443 -p 622 owntube_ansible@83.233.237.206
+ssh -f -N -L 16443:192.168.3.207:16443 -p 622 owntube_ansible@83.233.237.207
 ```
 
 ---
@@ -166,7 +166,7 @@ ps aux | grep "ssh.*16443" | grep -v grep
 
 **Fix:** Start the tunnel:
 ```bash
-ssh -f -N -L 16443:192.168.1.6:16443 -p 622 owntube_ansible@83.233.237.206
+ssh -f -N -L 16443:192.168.3.207:16443 -p 622 owntube_ansible@83.233.237.207
 ```
 
 ---
@@ -192,7 +192,7 @@ pkill -f "ssh.*16443"
 lsof -i :16443
 
 # Restart tunnel
-ssh -f -N -L 16443:192.168.1.6:16443 -p 622 owntube_ansible@83.233.237.206
+ssh -f -N -L 16443:192.168.3.207:16443 -p 622 owntube_ansible@83.233.237.207
 ```
 
 ---
@@ -224,10 +224,10 @@ If you want the tunnel to start automatically, add to your `~/.zshrc` or `~/.bas
 # Function to start OTV k8s tunnel
 otv-tunnel() {
     # Check if already running
-    if ps aux | grep -v grep | grep "ssh.*16443.*owntube_ansible@83.233.237.206" > /dev/null; then
+    if ps aux | grep -v grep | grep "ssh.*16443.*owntube_ansible@83.233.237.207" > /dev/null; then
         echo "✅ OTV k8s tunnel already running"
     else
-        ssh -f -N -L 16443:192.168.1.6:16443 -p 622 owntube_ansible@83.233.237.206
+        ssh -f -N -L 16443:192.168.3.207:16443 -p 622 owntube_ansible@83.233.237.207
         echo "✅ OTV k8s tunnel started"
     fi
 }

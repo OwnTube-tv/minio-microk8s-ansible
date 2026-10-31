@@ -99,7 +99,7 @@ Setup steps to integrate MinIO with Auth0 OpenID Connect for user authentication
     POST_LOGIN_MINIO_CLAIM_USER_POLICY_MAP={"mats.blomdahl@gmail.com":"consoleAdmin,diagnostics","mxl24@owntube.tv":"swt-readwrite,ot-readwrite","ar9708@mkdevops.se":"swt-readwrite,ot-readwrite","bot@mkdevops.se":"ot-readwrite","stambanan@pm.me":"swt-readwrite"}
     ```
 
-4.  Configure the Ansible project `secrets.yml` with the config URL, client ID and client secret for
+3.  Configure the Ansible project `secrets.yml` with the config URL, client ID and client secret for
     the OpenID application (from setup step 1):
 
     ```yaml
@@ -108,7 +108,7 @@ Setup steps to integrate MinIO with Auth0 OpenID Connect for user authentication
     minio_auth0_oauth_client_secret: 6-B**********************************************************koW
     ```
 
-5.  Run the `3-minio-auth0-oidc.yml` playbook to configure MinIO with Auth0 OpenID Connect:
+4.  Run the `3-minio-auth0-oidc.yml` playbook to configure MinIO with Auth0 OpenID Connect:
 
     ```shell
     ansible-playbook -e @secrets.yml 3-minio-oidc.yml
@@ -120,7 +120,7 @@ Setup steps to integrate MinIO with Auth0 OpenID Connect for user authentication
     GitHub identity. When returning to the login screen after GitHub-Auth0 authentication, you will
     find an error about the JWT Claim for policy does not exist; continue and set up in step 5.
 
-6.  Login to the MinIO web interface as admin using the _"Other Authentication Methods" >
+5.  Login to the MinIO web interface as admin using the _"Other Authentication Methods" >
     "Use Credentials"_ drop-down menu and create the following policies and buckets:
 
     1. Create a bucket named `"auth0-openid-noaccess"`, then configure a policy named `"noaccess"`
@@ -186,7 +186,7 @@ Setup steps to integrate MinIO with Auth0 OpenID Connect for user authentication
         }
         ```
 
-7.  Verify that the Auth0 OpenID Connect integration works by logging in to
+6.  Verify that the Auth0 OpenID Connect integration works by logging in to
     https://minio.owntube.tv/ with ...
 
     1.  a user that does not have a policy mapped to it, expect to only see the

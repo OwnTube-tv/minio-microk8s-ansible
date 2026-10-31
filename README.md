@@ -90,12 +90,13 @@ Setup steps to integrate MinIO with Auth0 OpenID Connect for user authentication
 
 2.  Configure your Auth0 tenant with the Auth0 _PostLogin_ Action
     ["Add MinIO Policy OpenID Claim"](https://github.com/auth0/opensource-marketplace/pull/20)
-    and set the following "secrets":
+    and set the following "secrets"
+    ([admin interface link](https://manage.auth0.com/dashboard/eu/owntube-tv/actions/triggers/post-login)):
 
     ```properties
     POST_LOGIN_MINIO_CLAIM_PREFIX=https://minio.owntube.tv/console/
     POST_LOGIN_MINIO_CLAIM_DEFAULT_POLICY=noaccess
-    POST_LOGIN_MINIO_CLAIM_USER_POLICY_MAP={"mats.blomdahl@gmail.com":"consoleAdmin,diagnostics","ar9708@mkdevops.se":"swt-readwrite,ot-readwrite","bot@mkdevops.se":"ot-readwrite","stambanan@pm.me":"swt-readwrite"}
+    POST_LOGIN_MINIO_CLAIM_USER_POLICY_MAP={"mats.blomdahl@gmail.com":"consoleAdmin,diagnostics","mxl24@owntube.tv":"swt-readwrite,ot-readwrite","ar9708@mkdevops.se":"swt-readwrite,ot-readwrite","bot@mkdevops.se":"ot-readwrite","stambanan@pm.me":"swt-readwrite"}
     ```
 
 3.  Configure the Ansible project `secrets.yml` with the config URL, client ID and client secret for

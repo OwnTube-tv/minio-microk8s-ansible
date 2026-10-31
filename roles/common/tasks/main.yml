@@ -75,8 +75,11 @@
   register: sshd_config_hardening
   tags: common
 
+# Ubuntu 24.04 socket-activates SSH: ssh.socket is enabled and ssh.service is
+# not, so the 'sshd' alias that enabling ssh.service would create may not
+# exist. 'ssh' is the unit's own name on every Ubuntu release.
 - name: Restart sshd to apply config changes
-  ansible.builtin.service: name=sshd state=restarted
+  ansible.builtin.service: name=ssh state=restarted
   when: sshd_config_hardening is changed
   tags: common
 

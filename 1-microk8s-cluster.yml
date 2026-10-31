@@ -5,6 +5,6 @@
   roles:
     - role: microk8s-cluster
       microk8s_servers_group: minio_microk8s_servers
-      microk8s_users: [ar9708, mblomdahl]
+      microk8s_users: [ar9708, mxl24, mblomdahl]
 
 ...

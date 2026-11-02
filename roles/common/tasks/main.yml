@@ -94,10 +94,12 @@
     state: present
   tags: common
 
+# systemd-tmpfiles replaces /etc/default/locale with a symlink to ../locale.conf
+# at every boot (L+ in /usr/lib/tmpfiles.d/debian.conf), so write the target.
 - name: Set en_US.UTF-8 as default system locale
   ansible.builtin.copy:
     content: "LANG=en_US.UTF-8\n"
-    dest: /etc/default/locale
+    dest: /etc/locale.conf
   tags: common
 
 - name: Install base packages

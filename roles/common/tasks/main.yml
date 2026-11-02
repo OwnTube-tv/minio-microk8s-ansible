@@ -138,4 +138,59 @@
     state: absent
   tags: common
 
+# The nodes are consumer mini PCs, and the kernel treats a12c's AMD SATA
+# controller as a laptop chipset: its links came up with link power management
+# enabled, a suspect in the CRC errors and link resets that a12c's SATA SSD
+# logged on 2026-11-02. These run around the clock, so pin every SATA link to
+# full power. See docs/hacks-and-troubleshooting.md.
+- name: Keep SATA links at full power instead of link power management
+  ansible.builtin.copy:
+    dest: /etc/udev/rules.d/60-sata-link-power.rules
+    content: |
+      # Managed by Ansible (minio-microk8s-ansible, role common).
+      # Keep SATA links at full power; see docs/hacks-and-troubleshooting.md.
+      ACTION=="add", SUBSYSTEM=="scsi_host", KERNEL=="host*", \
+        ATTR{link_power_management_policy}=="?*", \
+        ATTR{link_power_management_policy}="max_performance"
+    mode: "0644"
+  register: sata_link_power_rule
+  tags: common
+
+# A port without a device rejects the write ("Operation not supported"); udev
+# logs that and carries on with the other ports.
+- name: Apply the SATA link power rule without a reboot
+  ansible.builtin.shell: >-
+    udevadm control --reload &&
+    udevadm trigger --settle --subsystem-match=scsi_host --action=add
+  when: sata_link_power_rule is changed
+  tags: common
+
+# The Realtek r8125 driver that ar9708-r8125-hack builds on a12c and a12d is
+# compiled with Energy Efficient Ethernet on; the Intel igc NICs on a12a and
+# a12b already have it off, and the option is inert where r8125 is not loaded.
+# The hack reloads r8125 on every boot, so this takes effect at the next
+# reboot without disturbing the running link.
+- name: Disable Energy Efficient Ethernet in the Realtek r8125 driver
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/r8125.conf
+    content: |
+      # Managed by Ansible (minio-microk8s-ansible, role common).
+      # No Energy Efficient Ethernet; see docs/hacks-and-troubleshooting.md.
+      options r8125 eee_enable=0
+    mode: "0644"
+  tags: common
+
+# Nothing suspends these servers today, but logind's default
+# HandleSuspendKey=suspend would act on a keyboard's sleep key.
+- name: Mask the sleep, suspend and hibernate targets
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    masked: true
+  with_items:
+    - sleep.target
+    - suspend.target
+    - hibernate.target
+    - hybrid-sleep.target
+  tags: common
+
 ...

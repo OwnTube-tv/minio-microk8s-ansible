@@ -136,6 +136,8 @@ Establishes baseline server configuration:
 - Sets timezone to Europe/Stockholm
 - Installs base packages (acl, tree, jq, emacs, python3-kubernetes, etc.)
 - Removes firewalld (conflicts with Calico networking)
+- Turns off consumer power saving: SATA link power management, Energy Efficient Ethernet on the
+  Realtek NICs, and suspend/hibernate
 - Installs MicroK8s via snap
 - Prints manual clustering instructions for MicroK8s HA setup
 
@@ -189,6 +191,9 @@ See README.md section "Add OpenID Connect using Auth0" for complete setup instru
   does not depend on the OS installer's package selection, plus smartmontools and lm-sensors —
   see [docs/hardware.md](docs/hardware.md) for what each one reads)
 - Removes firewalld (conflicts with Calico)
+- Turns off consumer power saving for 24/7 operation: a udev rule pins SATA links to
+  `max_performance`, `options r8125 eee_enable=0` disables Energy Efficient Ethernet, and the
+  sleep/suspend/hibernate targets are masked
 
 **`microk8s-node`** - MicroK8s installation
 - Installs MicroK8s via snap (stable channel)
@@ -279,6 +284,15 @@ See `docs/hacks-and-troubleshooting.md` for details:
 - Without this hack, NICs freeze after several days of uptime
 - Driver source: `/root/r8125-9.012.04/` (extracted from Realtek tarball)
 - Verification: `lsmod | grep r8125` should show driver loaded
+- If the build fails after a kernel update the node boots without network, because the hack
+  unloads `r8169` first; `modprobe r8169` on the console restores it
+
+**Power saving (all nodes):**
+- The nodes are consumer mini PCs with laptop-style power-saving defaults; the `common` role turns
+  off what Linux controls, BIOS settings still need checking on site
+- a12c's AMD SATA controller had link power management on by default and its SATA SSD logged
+  CRC errors and link resets on 2026-11-02; all eight MinIO drives of a node share that one SSD
+- PCIe ASPM and NVMe APST are deliberately left at kernel defaults until they cause trouble
 
 ### External Integration Points
 

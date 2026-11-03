@@ -56,6 +56,9 @@ When the driver is installed as intended, the driver should be listed by `lsmod`
 
 If the `r8125` driver is not listed, then we have problems.
 
+If the build fails after a kernel update the node boots without network, as `autorun.sh` unloads
+`r8169` first. `modprobe r8169` on the console brings the link back.
+
 
 WiFi Disabled on All Cluster Nodes
 ----------------------------------
@@ -106,3 +109,23 @@ comes straight back:
 * optionally pin Calico with `IP_AUTODETECTION_METHOD: "cidr=192.168.3.0/24"`
 
 Restart `snap.microk8s.daemon-kubelite` after changing either argument file.
+
+
+Power Saving Disabled for 24/7 Operation
+----------------------------------------
+
+The nodes are consumer mini PCs with laptop-style power saving. On 2026-11-02 a12c's SATA SSD,
+which holds all eight of the node's MinIO drives, logged CRC errors at boot and fell back to
+3.0 Gbps; a12c was the only node with SATA link power management on. The `common` role sets:
+
+* SATA links to `max_performance` with a udev rule; check
+  `grep . /sys/class/scsi_host/host*/link_power_management_policy`
+* `options r8125 eee_enable=0`, no Energy Efficient Ethernet from the next boot; check
+  `sudo ethtool --show-eee enp2s0`
+* the sleep, suspend and hibernate targets masked
+
+PCIe ASPM and NVMe APST stay at kernel defaults until they cause trouble, then add
+`pcie_aspm=off nvme_core.default_ps_max_latency_us=0` to the kernel command line.
+
+In each node's BIOS, check on site: power on after power loss, ErP/deep sleep off, SATA ALPM and
+PCIe ASPM off where offered.

@@ -24,11 +24,11 @@ As the root user, extract the `r8125-9.012.04.tar.bz2` driver in `/root/r8125-9.
     bunzip2 r8125-9.012.04.tar.bz2
     tar xvf r8125-9.012.04.tar
 
-Create a new service `/etc/systemd/system/ar9708-r8125-hack.service`:
+Create a new service `/etc/systemd/system/mxl24-r8125-hack.service`:
 
 ```systemd
 [Unit]
-Description=ar9708-install-r8125-driver
+Description=mxl24-install-r8125-driver
 After=network.target
 
 [Service]
@@ -43,11 +43,11 @@ Restart=on-abnormal
 WantedBy=multi-user.target
 ```
 
-Reload and enable the `ar9708-r8125-hack` service, run a manual test to verify:
+Reload and enable the `mxl24-r8125-hack` service, run a manual test to verify:
 
     systemctl daemon-reload
-    systemctl enable ar9708-r8125-hack.service
-    systemctl start ar9708-r8125-hack
+    systemctl enable mxl24-r8125-hack.service
+    systemctl start mxl24-r8125-hack
 
 When the driver is installed as intended, the driver should be listed by `lsmod`:
 

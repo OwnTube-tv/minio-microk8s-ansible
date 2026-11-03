@@ -167,7 +167,7 @@
   when: sata_link_power_rule is changed
   tags: common
 
-# The Realtek r8125 driver that ar9708-r8125-hack builds on a12c and a12d is
+# The Realtek r8125 driver that mxl24-r8125-hack builds on a12c and a12d is
 # compiled with Energy Efficient Ethernet on; the Intel igc NICs on a12a and
 # a12b already have it off, and the option is inert where r8125 is not loaded.
 # The hack reloads r8125 on every boot, so this takes effect at the next

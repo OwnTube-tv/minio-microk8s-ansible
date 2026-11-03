@@ -280,7 +280,7 @@ See `docs/hacks-and-troubleshooting.md` for details:
 
 **Realtek r8125 NIC drivers (a12c and a12d):**
 - Servers a12c/a12d have 2.5 GbE NICs with problematic Ubuntu drivers
-- Custom systemd service `ar9708-r8125-hack.service` reinstalls Realtek drivers on each boot
+- Custom systemd service `mxl24-r8125-hack.service` reinstalls Realtek drivers on each boot
 - Without this hack, NICs freeze after several days of uptime
 - Driver source: `/root/r8125-9.012.04/` (extracted from Realtek tarball)
 - Verification: `lsmod | grep r8125` should show driver loaded

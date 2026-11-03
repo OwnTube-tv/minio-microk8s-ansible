@@ -92,7 +92,7 @@ The cluster demonstrates **hybrid RBAC implementation**:
    - Current Token: Long-lived token (8760h) via `microk8s-dashboard-token` secret
    - **After RBAC enforcement:** Will break unless given dedicated service account
 
-3. **Infrastructure Admins (ar9708, mblomdahl)**
+3. **Infrastructure Admins (mxl24, mblomdahl)**
    - Method: Direct `microk8s config` with embedded admin credentials
    - Permissions: Full cluster admin via `microk8s-admin` ClusterRoleBinding
    - Authentication: X.509 certificate as `front-proxy-client`
@@ -116,7 +116,7 @@ The cluster demonstrates **hybrid RBAC implementation**:
 | ARC runners                     | Yes (ephemeral pods)       | ✓ Proper RBAC     | ✓ Continues working             |
 | Dashboard                       | Yes (pod)                  | ✗ Uses default SA | ⚠️ Needs dedicated SA           |
 | Ingress/cert-manager            | Yes (DaemonSet/Deployment) | ✓ Proper RBAC     | ✓ Continues working             |
-| Admin users (ar9708, mblomdahl) | External (kubectl)         | ✓ Proper RBAC     | ✓ Continues working             |
+| Admin users (mxl24, mblomdahl)  | External (kubectl)         | ✓ Proper RBAC     | ✓ Continues working             |
 
 **Key Observation:** Most components already have proper RBAC. Only Dashboard and default service accounts need remediation.
 
@@ -424,7 +424,7 @@ The RBAC add-on reduces complexity from MEDIUM (manual configuration) to **LOW-M
 - [ ] Verify cert-manager certificate renewals
 - [ ] Verify ingress controller functionality
 - [ ] Verify dashboard access with new token
-- [ ] Test admin user access (ar9708, mblomdahl)
+- [ ] Test admin user access (mxl24, mblomdahl)
 - [ ] Run kube-bench CIS compliance scan
 - [ ] Update documentation
 
@@ -611,7 +611,7 @@ Add to main playbook:
   roles:
     - role: microk8s-cluster
       microk8s_servers_group: minio_microk8s_servers
-      microk8s_users: [ar9708, mblomdahl]
+      microk8s_users: [mxl24, mblomdahl]
   tasks:
     - name: Apply RBAC hardening
       ansible.builtin.include_role:
@@ -872,7 +872,7 @@ The OwnTube MinIO MicroK8s infrastructure demonstrates **strong foundation for R
 
 **Strengths:**
 - ✓ Modern components (ARC, cert-manager, ingress) have proper RBAC already
-- ✓ Admin users (ar9708, mblomdahl) have proper ClusterRoleBinding
+- ✓ Admin users (mxl24, mblomdahl) have proper ClusterRoleBinding
 - ✓ Small attack surface (2 admins, well-defined workloads)
 - ✓ MicroK8s RBAC add-on makes enablement trivial
 
@@ -938,7 +938,7 @@ RBAC implementation will be considered successful when:
    - ✓ ARC runners successfully execute GitHub Actions workflows
    - ✓ cert-manager renews Let's Encrypt certificates
    - ✓ Ingress controller routes traffic to MinIO and dashboard
-   - ✓ Admin users (ar9708, mblomdahl) can perform all operational tasks
+   - ✓ Admin users (mxl24, mblomdahl) can perform all operational tasks
    - ✓ Dashboard accessible with new read-only token
 
 3. **Operations:**
@@ -1088,7 +1088,7 @@ subjects:
 │  └─────────────────────┘  └──────────────────────┘                  │
 │                                                                     │
 │  ┌─────────────────────────────────────────────────────────────┐    │
-│  │  ADMIN USERS: ar9708, mblomdahl                             │    │
+│  │  ADMIN USERS: mxl24, mblomdahl                              │    │
 │  │  Auth: X.509 cert (front-proxy-client)                      │    │
 │  │  ClusterRoleBinding: microk8s-admin → admin ClusterRole     │    │
 │  │  ✓ Full cluster admin access (appropriate for infra owners) │    │
